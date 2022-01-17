@@ -16,6 +16,7 @@
 
 //-----------------util.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);
+size_t      ft_strlcpy(char *dst, const char *src, size_t size);
 
 //-----------------split.c---------------------
 char        **allo_free(char **rst);

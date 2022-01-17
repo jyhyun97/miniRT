@@ -1,4 +1,4 @@
-#include "../../include.minirt.h"
+#include "../../include/minirt.h"
 
 static int  cnt_word(char const *s, char c)
 {

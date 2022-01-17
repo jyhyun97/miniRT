@@ -17,6 +17,28 @@ t_info  *init_info(void)
     return (info);
 }
 
+int save_info(t_info *info, char *line)
+{
+    int error;
+
+    error = TRUE;
+    if (ft_strcmp(line[0], "A"))
+        error = set_ambient(info->canvas, &(line[1]));
+    else if (ft_strcmp(line[0], "C"))
+        error = set_camera(info->canvas, &(line[1]));
+    else if (ft_strcmp(line[0], "L"))
+        error = set_light(info->canvas, &(line[1]));
+    else if (ft_strcmp(line[0], "pl"))
+        error = set_plane(info, &(line[1]));
+    else if (ft_strcmp(line[0], "sp"))
+        error = set_sphere(info, &(line[1]));
+    else if (ft_strcmp(line[0], "cy"))
+        error = set_cylinder(info, &(line[1]));
+    else
+        error = FALSE;
+    return (error);
+}
+
 int parsing(char *file, t_info *info)
 {
     int     fd;
@@ -26,14 +48,21 @@ int parsing(char *file, t_info *info)
     fd = open(file, O_RDONLY);
     if (fd == -1)
         put_err("File open error", &info);
+    info->canvas = malloc(sizeof(t_canvas));
+    if (!info->canvas)
+        return (FALSE);
     while (get_next_line(fd, &line) > 0)
     {
         split = ft_split(line, ' ');
-        
-        //split을 info에 담는 함수
+        if (!split)
+            continue ;
+        if (!save_info(info, line))
+        {
+            allo_free(split);
+            return (FALSE);
+        }
         allo_free(split);
     }
-    
     close(fd);
     return (TRUE);
 }
