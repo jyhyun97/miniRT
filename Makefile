@@ -3,7 +3,8 @@ FLAGS = -Wall -Wextra -Werror
 SRCS_C = main.c\
 		parsing/get_next_line.c\
 		parsing/get_next_line_utils.c\
-		parsing/util.c
+		parsing/util.c\
+		parsing/split.c
 SRCS = $(addprefix src/, $(SRCS_C))
 
 OBJS = $(SRCS:.c=.o)

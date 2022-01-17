@@ -1,13 +1,6 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
-typedef struct s_color
-{
-    int red;
-    int green;
-    int blue;
-}   t_color;
-
 typedef struct s_vector
 {
     double x;
@@ -15,9 +8,11 @@ typedef struct s_vector
     double z;
 }   t_vector;
 
+typedef struct s_vector	t_color;
+
 typedef struct  s_light
 {
-    t_vector    *light_point;
+    t_vector    light_point;
     t_color     color;
     double      brightness;
 }   t_light;
@@ -35,7 +30,7 @@ typedef struct  s_canvas
     int         height;
     double      aspect_ratio;
     double      ambient;
-    t_color     *ambient_color;
+    t_color     ambient_color;
     t_light     *light;
     t_camera    *camera;
 }   t_canvas;
