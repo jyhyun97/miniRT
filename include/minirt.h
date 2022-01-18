@@ -32,9 +32,10 @@ char        **ft_split(char const *s, char c);
 //-----------------create.c---------------------
 t_vector    create_vector(double x, double y, double z);
 t_color     create_color(double x, double y, double z);
-t_sphere    create_sphere(t_vector point, double radius, t_color color);
-t_plane     create_plane(t_vector point, t_vector normal, t_color color);
-t_cylinder  create_cylinder(t_vector point, t_vector normal, double value[2], t_color color);
+t_sphere    *create_sphere(t_vector point, double radius, t_color color);
+t_plane     *create_plane(t_vector point, t_vector normal, t_color color);
+t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t_color color);
+t_object    *create_object(int type, void *figure);
 
 //-----------------check.c---------------------
 int check_int(char *str);

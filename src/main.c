@@ -14,6 +14,7 @@ void    free_info(t_info **info)
         {
             prev = curr;
             curr = prev->next;
+            free(prev->figure);
             free(prev);
         }
     }
@@ -76,22 +77,22 @@ void    print_object(t_object *object)
     {
         if (cur->type == SPHERE)
         {
-            tmp_sphere = (t_sphere *)(object->figure);
-            print_vector("sphere point ", tmp_sphere->point);
+            tmp_sphere = cur->figure;
+            print_vector("\nsphere point ", tmp_sphere->point);
             printf("sphere radius %f\n", tmp_sphere->radius);
             print_vector("sphere color ", tmp_sphere->color);
         }
         else if (cur->type == PLANE)
         {
-            tmp_plane = (t_plane *)(object->figure);
-            print_vector("plane point ", tmp_plane->point);
+            tmp_plane = cur->figure;
+            print_vector("\nplane point ", tmp_plane->point);
             print_vector("plane normal ", tmp_plane->normal);
             print_vector("plane color ", tmp_plane->color);
         }
         else if (cur->type == CYLINDER)
         {
-            tmp_cylinder = (t_cylinder *)(object->figure);
-            print_vector("cylinder point ", tmp_cylinder->point);
+            tmp_cylinder = cur->figure;
+            print_vector("\ncylinder point ", tmp_cylinder->point);
             print_vector("cylinder normal ", tmp_cylinder->normal);
             print_vector("cylinder color ", tmp_cylinder->color);
             printf("cylinder radius %f\n", tmp_cylinder->radius);
@@ -155,5 +156,6 @@ int main(int argc, char **argv)
     //rendering
     print_info(info);
     free_info(&info);
+    system("leaks miniRT");
     return (SUCCESS);
 }
