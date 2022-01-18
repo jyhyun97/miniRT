@@ -100,10 +100,9 @@ int set_plane(t_info *info, char **split)
     char **point;
     char **normal;
     char **color;
-    t_plane *plane;
+    t_plane plane;
     t_object *object;
 
-    plane = NULL;
     object = NULL;
     if (ft_strslen(split) != 3)
         return (ERROR);
@@ -118,17 +117,17 @@ int set_plane(t_info *info, char **split)
         allo_free(color);
         return (ERROR);
     }
-    *plane = create_plane(create_vector(ft_atod(point[0]), ft_atod(point[1]), ft_atod(point[2])),
+    plane = create_plane(create_vector(ft_atod(point[0]), ft_atod(point[1]), ft_atod(point[2])),
         create_vector(ft_atod(normal[0]), ft_atod(normal[1]), ft_atod(normal[2])),
         create_color(ft_atod(color[0]), ft_atod(color[1]), ft_atod(color[2])));
     allo_free(point);
     allo_free(normal);
     allo_free(color);
     object = malloc(sizeof(t_object));
-    if (check_normal(plane->normal) == FALSE || check_color(plane->color) == FALSE || !object)
+    if (check_normal(plane.normal) == FALSE || check_color(plane.color) == FALSE || !object)
         return (ERROR);
     object->type = PLANE;
-    object->figure = plane;
+    object->figure = &plane;
     object->next = NULL;
     push_object(info, object);
     return (SUCCESS);
@@ -136,13 +135,12 @@ int set_plane(t_info *info, char **split)
 
 int set_sphere(t_info *info, char **split)
 {
-    t_sphere    *sp;
+    t_sphere    sp;
     char        **centor;
     double      radius;
     char        **color;
     t_object    *object;
     
-    sp = NULL;
     object = NULL;
     if (ft_strslen(split) != 3 && !check_double(split[1]))
         return (ERROR);
@@ -155,15 +153,15 @@ int set_sphere(t_info *info, char **split)
         allo_free(color);
         return (ERROR);
     }
-    *sp = create_sphere(create_vector(ft_atod(centor[0]), ft_atod(centor[1]), ft_atod(centor[2])),
+    sp = create_sphere(create_vector(ft_atod(centor[0]), ft_atod(centor[1]), ft_atod(centor[2])),
                         radius,create_color(ft_atod(color[0]), ft_atod(color[1]), ft_atod(color[2]))); 
     allo_free(centor);
     allo_free(color);
     object = malloc(sizeof(t_object));
-    if (!check_color(sp->color) && !object)
+    if (!check_color(sp.color) && !object)
         return (ERROR);
     object->type = SPHERE;
-    object->figure = sp;
+    object->figure = &sp;
     object->next = NULL;
     push_object(info, object);
     return (SUCCESS);
@@ -175,10 +173,9 @@ int set_cylinder(t_info *info, char **split)
     char        **normal;
     char        **color;
     double      value[2];
-    t_cylinder  *cylinder;
+    t_cylinder  cylinder;
     t_object    *object;
     
-    cylinder = NULL;
     object = NULL;
     if (ft_strslen(split) != 5 || check_double(split[2]) == FALSE ||
         check_double(split[3]) == FALSE)
@@ -196,17 +193,17 @@ int set_cylinder(t_info *info, char **split)
         allo_free(color);
         return (ERROR);
     }
-    *cylinder = create_cylinder(create_vector(ft_atod(point[0]), ft_atod(point[1]), ft_atod(point[2])),
+    cylinder = create_cylinder(create_vector(ft_atod(point[0]), ft_atod(point[1]), ft_atod(point[2])),
         create_vector(ft_atod(normal[0]), ft_atod(normal[1]), ft_atod(normal[2])),
         value, create_color(ft_atod(color[0]), ft_atod(color[1]), ft_atod(color[2])));
     allo_free(point);
     allo_free(normal);
     allo_free(color);
     object = malloc(sizeof(t_object));
-    if (check_normal(cylinder->normal) == FALSE || check_color(cylinder->color) == FALSE || !object)
+    if (check_normal(cylinder.normal) == FALSE || check_color(cylinder.color) == FALSE || !object)
         return (ERROR);
     object->type = CYLINDER;
-    object->figure = cylinder;
+    object->figure = &cylinder;
     object->next = NULL;
     push_object(info, object);
     return (SUCCESS);

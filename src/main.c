@@ -42,17 +42,17 @@ int save_info(t_info *info, char **split)
     int error;
 
     error = SUCCESS;
-    if (ft_strcmp(split[0], "A"))
+    if (!ft_strcmp(split[0], "A"))
         error = set_ambient(info->canvas, &(split[1]));
-    else if (ft_strcmp(split[0], "C"))
+    else if (!ft_strcmp(split[0], "C"))
         error = set_camera(info->canvas, &(split[1]));
-    else if (ft_strcmp(split[0], "L"))
+    else if (!ft_strcmp(split[0], "L"))
         error = set_light(info->canvas, &(split[1]));
-    else if (ft_strcmp(split[0], "pl"))
+    else if (!ft_strcmp(split[0], "pl"))
         error = set_plane(info, &(split[1]));
-    else if (ft_strcmp(split[0], "sp"))
+    else if (!ft_strcmp(split[0], "sp"))
         error = set_sphere(info, &(split[1]));
-    else if (ft_strcmp(split[0], "cy"))
+    else if (!ft_strcmp(split[0], "cy"))
         error = set_cylinder(info, &(split[1]));
     else
         error = ERROR;
@@ -76,21 +76,21 @@ void    print_object(t_object *object)
     {
         if (cur->type == SPHERE)
         {
-            tmp_sphere = object->figure;
+            tmp_sphere = (t_sphere *)(object->figure);
             print_vector("sphere point ", tmp_sphere->point);
             printf("sphere radius %f\n", tmp_sphere->radius);
             print_vector("sphere color ", tmp_sphere->color);
         }
         else if (cur->type == PLANE)
         {
-            tmp_plane = object->figure;
+            tmp_plane = (t_plane *)(object->figure);
             print_vector("plane point ", tmp_plane->point);
             print_vector("plane normal ", tmp_plane->normal);
             print_vector("plane color ", tmp_plane->color);
         }
         else if (cur->type == CYLINDER)
         {
-            tmp_cylinder = object->figure;
+            tmp_cylinder = (t_cylinder *)(object->figure);
             print_vector("cylinder point ", tmp_cylinder->point);
             print_vector("cylinder normal ", tmp_cylinder->normal);
             print_vector("cylinder color ", tmp_cylinder->color);
