@@ -41,14 +41,7 @@ int save_info(t_info *info, char **split)
 {
     int error;
 
-    error = TRUE;
-    // int i = 0;
-    // (void)info;
-    // while (split[i] != 0)
-    // {
-    //     printf("split[%d] %s\n", i, split[i]);
-    //     i++;
-    // }
+    error = SUCCESS;
     if (ft_strcmp(split[0], "A"))
         error = set_ambient(info->canvas, &(split[1]));
     else if (ft_strcmp(split[0], "C"))
@@ -62,8 +55,65 @@ int save_info(t_info *info, char **split)
     else if (ft_strcmp(split[0], "cy"))
         error = set_cylinder(info, &(split[1]));
     else
-        error = FALSE;
+        error = ERROR;
     return (error);
+}
+
+void    print_vector(char *str, t_vector vec)
+{
+    printf("%s ", str);
+    printf("(x, y, z) = (%f, %f, %f)\n", vec.x, vec.y, vec.z);
+}
+
+void    print_object(t_object *object)
+{
+    t_object    *cur = object;
+    t_sphere    *tmp_sphere;
+    t_plane     *tmp_plane;
+    t_cylinder  *tmp_cylinder;
+
+    while (cur != NULL)
+    {
+        if (cur->type == SPHERE)
+        {
+            tmp_sphere = object->figure;
+            print_vector("sphere point ", tmp_sphere->point);
+            printf("sphere radius %f\n", tmp_sphere->radius);
+            print_vector("sphere color ", tmp_sphere->color);
+        }
+        else if (cur->type == PLANE)
+        {
+            tmp_plane = object->figure;
+            print_vector("plane point ", tmp_plane->point);
+            print_vector("plane normal ", tmp_plane->normal);
+            print_vector("plane color ", tmp_plane->color);
+        }
+        else if (cur->type == CYLINDER)
+        {
+            tmp_cylinder = object->figure;
+            print_vector("cylinder point ", tmp_cylinder->point);
+            print_vector("cylinder normal ", tmp_cylinder->normal);
+            print_vector("cylinder color ", tmp_cylinder->color);
+            printf("cylinder radius %f", tmp_cylinder->radius);
+            printf("cylinder height %f", tmp_cylinder->height);
+        }
+        cur = cur->next;
+    }
+}
+
+void print_info(t_info *info)
+{
+    printf("canvas width %d\n", info->canvas->width);
+    printf("canvas height %d\n", info->canvas->height);
+    printf("ambient %f\n", info->canvas->ambient);
+    print_vector("ambient color", info->canvas->ambient_color);
+    print_vector("light point", info->canvas->light.light_point);    
+    print_vector("light color", info->canvas->light.color);
+    printf("brightness %f\n", info->canvas->light.brightness);
+    print_vector("camera view_vector", info->canvas->camera.view_vector);
+    print_vector("camera normal", info->canvas->camera.normal);
+    printf("camera fov %d\n", info->canvas->camera.fov);
+    print_object(info->object);
 }
 
 int parsing(char *file, t_info *info)
@@ -81,7 +131,7 @@ int parsing(char *file, t_info *info)
     while (get_next_line(fd, &line) > 0)
     {
         split = ft_split(line, ' ');
-        if (split[0] != 0 && !save_info(info, split))
+        if (split[0] != 0 && save_info(info, split))
         {
             allo_free(split);
             return (FALSE);
@@ -103,8 +153,7 @@ int main(int argc, char **argv)
     if (!parsing(argv[1], info))
         put_err("Parsing Error", info);
     //rendering
+    print_info(info);
     free_info(&info);
-
-    
     return (SUCCESS);
 }

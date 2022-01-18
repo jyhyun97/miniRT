@@ -3,11 +3,13 @@
 t_vector    create_vector(double x, double y, double z)
 {
     t_vector vector;
+
     vector.x = x;
     vector.y = y;
     vector.z = z;
     return (vector);
 }
+
 t_color     create_color(double x, double y, double z)
 {
     t_color color;

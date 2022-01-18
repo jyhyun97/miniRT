@@ -64,9 +64,3 @@
 * 2.7[4주차]
    - [ ] 리펙
 
-
-Makefile
-scene/ .rt
-include/ 헤더
-mlx/
-src/ 파싱/ 렌더링/

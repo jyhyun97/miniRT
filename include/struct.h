@@ -31,8 +31,8 @@ typedef struct  s_canvas
     double      aspect_ratio;
     double      ambient;
     t_color     ambient_color;
-    t_light     *light;
-    t_camera    *camera;
+    t_light     light;
+    t_camera    camera;
 }   t_canvas;
 
 typedef struct  s_object
