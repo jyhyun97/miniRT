@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/18 12:03:43 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/01/17 10:52:38 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/01/18 14:35:44 by jeonhyun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,6 @@ int	rd_end(int read_len, char **line, char **bkup)
 		bkup_p = ft_strchr(*bkup, '\n');
 		if (bkup_p != 0)
 			return (split_line(line, bkup, bkup_p));
-	}
-	else if (*bkup != 0)
-	{
 		*line = ft_strdup(*bkup);
 		if (!(*line))
 			return (-1);
