@@ -94,8 +94,8 @@ void    print_object(t_object *object)
             print_vector("cylinder point ", tmp_cylinder->point);
             print_vector("cylinder normal ", tmp_cylinder->normal);
             print_vector("cylinder color ", tmp_cylinder->color);
-            printf("cylinder radius %f", tmp_cylinder->radius);
-            printf("cylinder height %f", tmp_cylinder->height);
+            printf("cylinder radius %f\n", tmp_cylinder->radius);
+            printf("cylinder height %f\n", tmp_cylinder->height);
         }
         cur = cur->next;
     }
