@@ -41,6 +41,7 @@ t_sphere    *create_sphere(t_vector point, double radius, t_color color);
 t_plane     *create_plane(t_vector point, t_vector normal, t_color color);
 t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t_color color);
 t_object    *create_object(int type, void *figure);
+t_cam       create_cam(t_camera camera);
 
 //-----------------check.c---------------------
 int check_int(char *str);
@@ -72,4 +73,9 @@ double      vec_dot(t_vector vec1, t_vector vec2);
 t_vector    vec_cross(t_vector vec1, t_vector vec2);
 double      vec_len(t_vector vec);
 
+//-----------------rendering.c------------------
+int         rendering(t_info *info);
+void        my_mlx_pixel_put(t_img *img, t_color color, int x, int y);
+t_ray       set_ray(t_cam cam, double u, double v);
+void        set_image(t_img *img, t_info *info);
 #endif

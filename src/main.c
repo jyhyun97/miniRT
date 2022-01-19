@@ -111,7 +111,7 @@ void print_info(t_info *info)
     print_vector("light point", info->canvas->light.light_point);    
     print_vector("light color", info->canvas->light.color);
     printf("brightness %f\n", info->canvas->light.brightness);
-    print_vector("camera view_vector", info->canvas->camera.view_vector);
+    print_vector("camera origin", info->canvas->camera.origin);
     print_vector("camera normal", info->canvas->camera.normal);
     printf("camera fov %d\n", info->canvas->camera.fov);
     print_object(info->object);
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
         put_err("Init Error\n", info);
     else if (!parsing(argv[1], info))
         put_err("Parsing Error\n", info);
-    else if (!rendering(info));
+    else if (!rendering(info))
         put_err("rendering Error\n", info);
     // print_info(info);
     free_info(&info);

@@ -7,7 +7,9 @@ SRCS_C = main.c\
 		parsing/set.c\
 		parsing/split.c\
 		parsing/create.c\
-		parsing/check.c
+		parsing/check.c\
+		rendering/render.c\
+		rendering/vector.c
 SRCS = $(addprefix src/, $(SRCS_C))
 
 OBJS = $(SRCS:.c=.o)

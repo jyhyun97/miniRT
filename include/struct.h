@@ -24,6 +24,11 @@ typedef struct s_camera
     int         fov;
 }   t_camera;
 
+typedef struct s_ray
+{
+    t_vector    origin;
+    t_vector    normal;
+}   t_ray;
 
 
 typedef struct s_cam
