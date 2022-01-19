@@ -19,16 +19,28 @@ typedef struct  s_light
 
 typedef struct s_camera
 {
-    t_vector    view_vector;
+    t_vector    origin;
     t_vector    normal;
     int         fov;
 }   t_camera;
 
+
+
+typedef struct s_cam
+{
+    double      viewport_w;
+    double      viewport_h;
+    double      aspect_ratio;
+    double      focal_length;
+    t_vector    origin;
+    t_vector    horizontal;
+    t_vector    vertical;
+    t_vector    left_bottom;
+    t_vector    normal;
+}   t_cam;
+
 typedef struct  s_canvas
 {
-    int         width;
-    int         height;
-    double      aspect_ratio;
     double      ambient;
     t_color     ambient_color;
     t_light     light;
@@ -70,5 +82,20 @@ typedef struct  s_info
     t_canvas    *canvas;
     t_object    *object;
 }   t_info;
+
+typedef struct  s_mlx
+{
+    void    *mlx_ptr;
+    void    *win;
+}   t_mlx;
+
+typedef struct  s_img
+{
+    void    *img_ptr;
+    char    *data;
+    int     size_l;
+    int     bpp;
+    int     endian;
+}   t_img;
 
 #endif

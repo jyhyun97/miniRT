@@ -5,6 +5,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <math.h>
 # include "../mlx/mlx.h"
 # include "get_next_line.h"
 # include "struct.h"
@@ -17,6 +18,10 @@
 # define PLANE 1
 # define CYLINDER 2
 # define SPHERE 3
+
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 640
+
 //-----------------util.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);
 size_t      ft_strlcpy(char *dst, const char *src, size_t size);
@@ -44,7 +49,7 @@ int check_vector(char **element);
 int check_color(t_color color);
 int check_normal(t_vector normal);
 
-//-----------------check.c---------------------
+//-----------------set.c---------------------
 void    push_object(t_info *info, t_object *object);
 int     set_ambient(t_canvas *canvas, char **split);
 int     set_camera(t_canvas *canvas, char **split);
@@ -53,5 +58,18 @@ int     set_plane(t_info *info, char **split);
 int     set_sphere(t_info *info, char **split);
 int     set_cylinder(t_info *info, char **split);
 
+//-----------------vector.c---------------------
+t_vector    vec_plus(t_vector vec1, t_vector vec2);
+t_vector    vec_plus_(t_vector vec1, double t);
+t_vector    vec_minus(t_vector vec1, t_vector vec2);
+t_vector    vec_minus_(t_vector vec1, double t);
+t_vector    vec_mult(t_vector vec1, t_vector vec2);
+t_vector    vec_mult_(t_vector vec1, double t);
+t_vector    vec_div(t_vector vec1, t_vector vec2);
+t_vector    vec_div_(t_vector vec1, double t);
+t_vector    vec_unit(t_vector vec);
+double      vec_dot(t_vector vec1, t_vector vec2);
+t_vector    vec_cross(t_vector vec1, t_vector vec2);
+double      vec_len(t_vector vec);
 
 #endif

@@ -1,5 +1,59 @@
 #include "../../include/minirt.h"
 
+double  degree_to_radian(int degree)
+{
+    return (degree * M_PI / 180);
+}
+
+t_camera    create_cam(t_camera camera)
+{
+    t_cam   cam;
+
+    cam.aspect_ratio = (double)((double)WIN_WIDTH / (double)WIN_HEIGHT);
+    cam.viewport_h = 2 * tan(degree_to_radian(camera.fov / 2));
+    cam.viewport_w = cam.viewport_h * cam.aspect_ratio;
+    cam.focal_length = 1;
+    cam.origin = camera.origin;
+    cam.normal = camera.normal;
+    
+
+    return (cam);
+}
+/*
+    double      viewport_w;
+    double      viewport_h;
+    double      aspect_ratio;
+    double      focal_length;
+    t_vector    origin;
+    t_vector    horizontal;
+    t_vector    vertical;
+    t_vector    left_bottom;
+    t_vector    normal;
+*/
+
+
+/*
+    t_camera	cam;
+	t_point	lookfrom = data.coor1;//카메라좌표
+	t_point	lookat = data.normal_vector;//카메라 방향벡터
+	t_vec		vup = vec(0, 1, 0);//y축 방향벡터?
+
+	cam.viewport_h = 2 * tan(get_radian(data.view_degree) / 2);//
+	cam.viewport_w = cam.viewport_h * canvas->aspect_ratio;
+	cam.focal = vec(0, 0, 1);
+
+	t_vec w = vunit(vminus(lookfrom,  lookat));
+	t_vec u = vunit(vcross(vup, w));
+	t_vec v = vcross(w, u);
+
+	cam.orig = lookfrom;
+	cam.horizontal = vmult_(vec(cam.viewport_w, 0, 0), u);//*u
+	cam.vertical = vmult_(vec(0, cam.viewport_h, 0), v);//*v
+	cam.left_bottom = vminus(vminus(vminus(cam.orig, vdivide(cam.horizontal, 2)), vdivide(cam.vertical, 2)), w);
+	cam.normal_vector = data.normal_vector;
+	return (cam);
+*/
+
 t_vector    create_vector(double x, double y, double z)
 {
     t_vector vector;

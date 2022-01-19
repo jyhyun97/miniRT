@@ -106,8 +106,6 @@ void    print_object(t_object *object)
 
 void print_info(t_info *info)
 {
-    printf("canvas width %d\n", info->canvas->width);
-    printf("canvas height %d\n", info->canvas->height);
     printf("ambient %f\n", info->canvas->ambient);
     print_vector("ambient color", info->canvas->ambient_color);
     print_vector("light point", info->canvas->light.light_point);    
@@ -166,11 +164,11 @@ int main(int argc, char **argv)
     info = init_info();
     if (!info)
         put_err("Init Error\n", info);
-    if (!parsing(argv[1], info))
+    else if (!parsing(argv[1], info))
         put_err("Parsing Error\n", info);
-    
-    //rendering
-    print_info(info);
+    else if (!rendering(info));
+        put_err("rendering Error\n", info);
+    // print_info(info);
     free_info(&info);
     system("leaks miniRT");
     return (SUCCESS);

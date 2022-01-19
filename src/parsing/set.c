@@ -61,7 +61,7 @@ int set_camera(t_canvas *canvas, char **split)
         rtn = ERROR;
     else if (rtn != ERROR)
     {
-        canvas->camera.view_vector = create_vector(ft_atod(view_vector[0]), ft_atod(view_vector[1]), ft_atod(view_vector[2]));
+        canvas->camera.origin = create_vector(ft_atod(view_vector[0]), ft_atod(view_vector[1]), ft_atod(view_vector[2]));
         canvas->camera.normal = create_vector(ft_atod(norm_vector[0]), ft_atod(norm_vector[1]), ft_atod(norm_vector[2]));
         canvas->camera.fov = ft_atoi(split[2]);
     }
