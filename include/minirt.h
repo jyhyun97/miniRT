@@ -22,6 +22,10 @@
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 640
 
+# define KEY_PRESS 2
+# define ESC_KEY   53
+# define EXIT_BUTTON 17
+
 //-----------------util.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);
 size_t      ft_strlcpy(char *dst, const char *src, size_t size);
@@ -78,4 +82,15 @@ int         rendering(t_info *info);
 void        my_mlx_pixel_put(t_img *img, t_color color, int x, int y);
 t_ray       set_ray(t_cam cam, double u, double v);
 void        set_image(t_img *img, t_info *info);
+
+//-----------------main.c------------------
+void    free_info(t_info **info);
+void    print_vector(char *str, t_vector vec);
+
+//-----------------hit.c------------------
+t_object    *hit_objects(t_info *info, t_ray ray);
+double      hit_sphere(t_sphere *sp, t_ray ray);
+double      hit_plane(t_plane *pl, t_ray ray);
+double      hit_cylinder(t_cylinder *cl, t_ray ray);
+
 #endif
