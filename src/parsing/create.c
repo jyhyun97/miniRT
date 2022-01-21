@@ -5,6 +5,37 @@ double  degree_to_radian(int degree)
     return (degree * M_PI / 180);
 }
 
+/*
+class camera {
+public:
+  camera(
+    point3  lookfrom,
+    point3  lookat,
+    vec3    vup,
+    double  vfov,     // vertical field-of-view in degrees
+    double  aspect_ratio
+  ) {
+    auto theta = degrees_to_radians(vfov);
+    auto h = tan(theta / 2);
+    auto viewport_height = 2.0 * h;
+    auto viewport_width = aspect_ratio * viewport_height;
+
+    auto w = unit_vector(lookfrom - lookat);
+    auto u = unit_vector(cross(vup, w));
+    auto v = cross(w, u);
+
+    origin = lookfrom;
+    horizontal = viewport_width * u;
+    vertical = viewport_height * v;
+    lower_left_corner = origin - horizontal / 2 - vertical / 2 - w;
+  }
+
+  ray get_ray(double s, double t) const {
+    return (ray(origin, lower_left_corner + s * horizontal + t * vertical - origin));
+  }
+
+*/
+
 t_cam    create_cam(t_camera camera)
 {
     t_cam       cam;
@@ -12,23 +43,23 @@ t_cam    create_cam(t_camera camera)
     t_vector    v;
     t_vector    w;
 
-    cam.focal_length = 5;
+    cam.focal_length = 1;//
     cam.aspect_ratio = (double)((double)WIN_WIDTH / (double)WIN_HEIGHT);
     cam.viewport_h = cam.focal_length * 2 * tan(degree_to_radian(camera.fov / 2));
     cam.viewport_w = cam.viewport_h * cam.aspect_ratio;
     cam.origin = camera.origin;
-    cam.normal = camera.normal;
-    w = cam.normal;
-    u = vec_unit(vec_cross(create_vector(0, 1, 0), w));
-    v = vec_cross(w, u);
+    cam.normal = vec_unit(camera.normal);
+    w = vec_mult_(cam.normal, -1);
+    u = vec_unit(vec_cross(w, create_vector(w.z, w.x, w.y)));//
+    v = vec_unit(vec_cross(w, u));
     // print_vector("u", u);
     // print_vector("v", v);
 
-    cam.horizontal = vec_mult(create_vector(cam.viewport_w, 0, 0), u);
-    cam.vertical = vec_mult(create_vector(0, cam.viewport_h, 0), v);
+    cam.horizontal = vec_mult_(v, cam.viewport_w);
+    cam.vertical = vec_mult_(u, cam.viewport_h);
     cam.left_bottom = vec_minus(cam.origin, vec_plus(vec_div_(cam.horizontal, 2), 
                                             vec_plus(vec_div_(cam.vertical, 2), 
-                                            vec_mult_(w, -1))));
+                                            w)));
     
     // printf("cam.AR %f\n", cam.aspect_ratio);
     // printf("cam.view_port_h %f\n", cam.viewport_h);
@@ -38,7 +69,7 @@ t_cam    create_cam(t_camera camera)
     // print_vector("cam.horizontal", cam.horizontal);
     // print_vector("cam.vertical", cam.vertical);
     // print_vector("cam.left_bottom", cam.left_bottom);
-    //while (1) ;
+    
     return (cam);
 }
 
@@ -72,8 +103,8 @@ t_sphere    *create_sphere(t_vector point, double radius, t_color color)
     sp->color = color;
     sp->point = point;
     sp->radius = radius / 2;
-    print_vector("sphere centor ", sp->point);
-    printf("%f\n", sp->radius);
+    // print_vector("sphere centor ", sp->point);
+    // printf("%f\n", sp->radius);
     return (sp);
 }
 

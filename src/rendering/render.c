@@ -15,16 +15,49 @@ t_ray   set_ray(t_cam cam, double u, double v)
     t_ray   ray;
 
     ray.origin = cam.origin;
-    // ray.normal = vec_unit(vec_minus(vec_plus(cam.left_bottom, 
-    //     vec_plus(vec_mult_(cam.horizontal, u), 
-    //     (vec_mult_(cam.vertical, v)))), ray.origin));
-    
-    ray.normal = vec_unit(vec_minus(cam.origin, vec_plus(vec_plus(cam.left_bottom, vec_mult_(cam.horizontal, u)),
-        vec_mult_(cam.vertical, v))));
-
+    //print_vector("ray origin", ray.origin);
+    ray.normal = vec_unit(vec_minus(vec_plus(cam.left_bottom, 
+         vec_plus(vec_mult_(cam.horizontal, u), 
+         (vec_mult_(cam.vertical, v)))), ray.origin));
+    //오리진 - (바텀 + 수평 + 수직)
+    // print_vector("non_unit ray normal", vec_minus(vec_plus(cam.left_bottom, 
+    //      vec_plus(vec_mult_(cam.horizontal, u), 
+    //      (vec_mult_(cam.vertical, v)))), ray.origin));
     // print_vector("set ray normal", ray.normal);
+    // while (1)
+    //     ;
     return (ray);
 }
+
+t_color choose_color(t_object *curr_ob)
+{
+    t_color     rtn;
+    t_sphere    *sp;
+    t_plane     *pl;
+    t_cylinder  *cy;
+    
+    rtn = create_vector(255, 255, 255);
+    sp = NULL;
+    pl = NULL;
+    cy = NULL;
+    if (curr_ob->type == SPHERE)
+    {
+        sp = curr_ob->figure;
+        rtn = sp->color;
+    }
+    else if (curr_ob->type == PLANE)
+    {
+        pl = curr_ob->figure;
+        rtn = pl->color;
+    }
+    else if (curr_ob->type == CYLINDER)
+    {
+        cy = curr_ob->figure;
+        rtn = cy->color;
+    }
+    return (rtn);
+}
+
 
 void   set_image(t_img *img, t_info *info)
 {
@@ -33,7 +66,7 @@ void   set_image(t_img *img, t_info *info)
     t_cam       cam;
     t_ray       ray;
     t_color     color;
-    //t_object    *curr_ob;
+    t_object    *curr_ob;
     
     cam = create_cam(info->canvas->camera);
     h = -1;
@@ -44,11 +77,9 @@ void   set_image(t_img *img, t_info *info)
         {
             //레이 설정
             ray = set_ray(cam, (double)w / (WIN_WIDTH - 1), (double)h / (WIN_HEIGHT - 1));
-            // curr_ob = hit_objects(info, ray);
-            // if (curr_ob)
-            //     color = choose_color(curr_ob); //////////////
-            if (hit_objects(info, ray))
-                color = create_vector(0, 0, 0);
+            curr_ob = hit_objects(info, ray);
+            if (curr_ob)
+                color = choose_color(curr_ob);
             else
                 color = create_vector(255, 255, 255);
             //오브젝트면 퐁라이트 해주고 색깔 반환
