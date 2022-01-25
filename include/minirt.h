@@ -75,7 +75,7 @@ t_vector    vec_div_(t_vector vec1, double t);
 t_vector    vec_unit(t_vector vec);
 double      vec_dot(t_vector vec1, t_vector vec2);
 t_vector    vec_cross(t_vector vec1, t_vector vec2);
-double      vec_len(t_vector vec);
+double      vec_len2(t_vector vec);
 
 //-----------------rendering.c------------------
 int         rendering(t_info *info);
@@ -91,6 +91,6 @@ void    print_vector(char *str, t_vector vec);
 t_object    *hit_objects(t_info *info, t_ray ray);
 double      hit_sphere(t_sphere *sp, t_ray ray);
 double      hit_plane(t_plane *pl, t_ray ray);
-double      hit_cylinder(t_cylinder *cl, t_ray ray);
+double      hit_cylinder(t_cylinder *cy, t_ray ray);
 
 #endif

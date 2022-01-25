@@ -71,7 +71,7 @@ t_vector    vec_unit(t_vector vec)
 {
     double  len;
     
-    len = vec_len(vec);
+    len = sqrt(vec_len2(vec));
     return (vec_div_(vec, len));
 }
 
@@ -90,7 +90,7 @@ t_vector    vec_cross(t_vector vec1, t_vector vec2)
     return (new);
 }
 
-double      vec_len(t_vector vec)
+double      vec_len2(t_vector vec)
 {
     return (vec_dot(vec, vec));
 }

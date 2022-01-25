@@ -130,7 +130,7 @@ t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t
         return (NULL);
     cy->point = point;
     cy->normal = normal;
-    cy->radius = value[0];
+    cy->radius = value[0] / 2;
     cy->height = value[1];
     cy->color = color;
     return (cy);

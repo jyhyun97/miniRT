@@ -40,12 +40,38 @@ double  hit_plane(t_plane *pl, t_ray ray)
     return (t);
 }
 
-
-
-// double  hit_cylinder(t_cylinder *cl, t_ray ray)
-// {
+double  hit_cylinder(t_cylinder *cy, t_ray ray)
+{
+    t_vector    pc;
+    double      a;
+    double      b;
+    double      c;
+    double      discriminant;
+    double      t1;
+    double      t2;
     
-// }
+    pc = vec_minus(ray.origin, cy->point);
+    a = vec_len2(vec_cross(ray.normal, cy->normal));
+    b = vec_dot(vec_cross(ray.normal, cy->normal), vec_cross(pc, cy->normal));
+    c = vec_len2(vec_cross(pc, cy->normal)) - pow(cy->radius, 2);
+    
+    discriminant = (b * b) - (a * c);
+    printf("discriminant: %f\n", discriminant);
+    if (discriminant < 0)
+        return (-1);
+    return (1);
+    t1 = (-b - sqrt(discriminant)) / a;
+    t2 = (-b + sqrt(discriminant)) / a;
+    // printf("t1: %f\tt2: %f\n", t1, t2);
+    if (t1 < t2 && t2 > 0)
+        return (t2);
+    else if (t1 > t2 && t1 > 0)
+        return (t1);
+    else
+        return (-1);
+   
+
+}
 
 t_object *hit_objects(t_info *info, t_ray ray)
 {
@@ -77,15 +103,15 @@ t_object *hit_objects(t_info *info, t_ray ray)
                 rtn = curr_ob;
             }
         }
-        // else // CYLINDER
-        // {
-        //     tmp_min = hit_cylinder(curr_ob->figure, ray);
-        //     if (tmp_min < min)
-        //     {
-        //         min = tmp_min;
-        //         rtn = curr_ob;
-        //     }
-        // }
+        else// CYLINDER
+        {
+            tmp_min = hit_cylinder(curr_ob->figure, ray);
+            if (0 <= tmp_min && tmp_min < min)
+            {
+                min = tmp_min;
+                rtn = curr_ob;
+            }
+        }
         curr_ob = curr_ob->next;
     }
     return (rtn);

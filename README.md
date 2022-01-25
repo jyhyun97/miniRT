@@ -57,7 +57,7 @@
 ## 주차별 과정
 * 1.17[1주차]
    - [ x ] 파싱 {1.17 ~ 1.18}
-   - [ x ] 카메라
+   - [ x ] 카메라 {1.18 ~ 1.19}
       - [ x ]창 띄우기
       - [ x ] mlx관련 함수 만들기
       - [ x ] 벡터 함수
@@ -137,3 +137,59 @@
 
    t = PN • (P0 - A) / PN • B
    ```
+
+
+## Ray와 평면의 교점 찾기
+   ```
+   원기둥의 축을 나타내는 방정식 [P(t1)]
+      P(t1) = P0 + Vt1 = cy.point + cy.normal * t1
+   원기둥의 축과 거리가 r인 임의의 ray[R(t2)]는 원기둥과 교점이 있다고 본다.
+      R(t2) = A + Bt2 = ray.origin + ray.normal * t2
+
+   if. R(t2)는 원기둥의 표면을 지난다고 가정하자.
+   그럼 R(t2) - P0는 분명 원기둥 내의 어떤 점일것이다.
+   여기서 원기둥의 normal 벡터와 외적한 값은 반지름이 될것이다.
+
+   ((R(t2) - P0) x V)^2 = r^2
+   ((ray - cy.point) x cy.normal)^2 = 반지름^2
+
+   A x B = |A| |B| sin(theta)
+   (ray - cy.point) x cy.normal = |(ray - cy.point)| |cy.normal| sin(theta) = Vector(r)
+
+   ((A + Bt - P0) x V)^2 = r^2
+   ((Bt + (A - P0)) x V)^2 = r^2
+   ((B x V)t + ((A - P0) X V))^2 = r^2
+   
+   (B x V)^2 * t^2 + 2(B x V)((A - P0) X V)t + ((A - P0) X V)^2 - r^2 = 0
+
+   (B x V)^2 * t^2 + 2(B x V)•((A - P0) x V)t + ((A - P0) x V)^2 = r^2
+   (B x V)^2 * t^2 + 2(B x V)•((A - P0) x V)t + ((A - P0) x V)^2 - r^2 = 0
+
+   a = (B x V)^2
+   b_half = (B x V)•((A - P0) x V)
+   c = ((A - P0) x V)^2 - r^2
+   
+   ray = A + Bt
+   ray.point = A
+   ray.normal = B
+   cy.point = P0
+   cy.normal = V
+
+   a = (ray.normal x cy.normal)^2
+   b_half = (ray.normal x cy.normal)((ray.point - cy.point) x cy.normal)
+   c = ((ray.point - cy.point) x cy.noral)^2 - cy.radius^2
+   
+   at^2 + (2b_half)t + c = 0
+   
+   근의 공식!!! = (-b +- sqrt(b^2 - ac)) / a
+   점화식 =   b^2 - ac > 0 [근이 두개]
+            b^2 - ac = 0 [근이 한개]
+            b^2 - ac < 0 [근이 없음]
+   dis = b * b - a * c
+   if (dis < 0)
+      return (-1);
+   t1 = (-b + sqrt(dis)) / a;
+   t2 = (-b - sqrt(dis)) / a;
+   
+   ```
+   
