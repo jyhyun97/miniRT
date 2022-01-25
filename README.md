@@ -66,7 +66,7 @@
    - [ ] 도형
       - [ x ] 구
       - [ x ] 평면
-      - [ ] 원기둥
+      - [ x ] 원기둥
       - [ ] 어안렌즈 효과 보정
 * 1.31[3주차]
    - [ ] phong 모델
@@ -191,5 +191,51 @@
    t1 = (-b + sqrt(dis)) / a;
    t2 = (-b - sqrt(dis)) / a;
    
+   if (작은 값 < 큰 값)
+      t = 작은 값
+   {
+      t1 알고있는 값
+      R(t1) = A + Bt1 => 좌표(원기둥 표면의 점)
+
+      P0(원기둥의 중심)
+
+      V1(원기둥 중심부터 표면의 점까지의 벡터) = R(t1) - P0
+
+      V0(원기둥의 normal)
+   }
+   0 <= V1 • V0 =< h (원기둥의 측면만 고려한 상황) 
+
+   t_vec ray = ray.origin + ray.normal * t; (무한한 원기둥과 Ray의 교점까지의 벡터)
+
+   t_vec RO = cy.point - ray; (교점과 원기둥의 중심까지의 벡터)
+
+   double   h = R0 • cy.normal;
+
+   if (0 <= h && h <= cy.height)
+      return (t);
+   else
+   {
+      double   t`;
+      if (h < 0)
+         t`= (cy.normal • (cy.point - A)) / (cy.normal • B);
+      else
+         t`= (cy.normal • (cy.point + (h * cy.normal) - A)) / (cy.normal • B);
+      
+      if (t` > r)
+         return (-1);
+      return (t`);
+   }
+
+   OT` = (R(t`) - cy.point) = A + Bt` - cy.point
+   
+   OT` • cy.normal = 0
+   (Bt` + (A - cy.point)) • cy.normal = cy.normal • Bt` + cy.normal • (A - cy.point) = 0
+   cy.normal • Bt` = cy.normal • (cy.point - A)
+   t`= (cy.normal • (cy.point - A)) / (cy.normal • B)
+
+   OT` = R(t`) - (cy.point + (h * cy.normal))
+   t`= (cy.normal • (cy.point + (h * cy.normal) - A)) / (cy.normal • B)
+
+
    ```
    

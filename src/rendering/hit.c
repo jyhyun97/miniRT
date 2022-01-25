@@ -40,6 +40,31 @@ double  hit_plane(t_plane *pl, t_ray ray)
     return (t);
 }
 
+double  hit_cylinder_cap(t_cylinder *cy, t_ray ray, double t)
+{
+    t_vector    rt;
+    t_vector    ro;
+    double      h;
+    double      tp;
+    
+    rt = vec_plus(ray.origin, vec_mult_(ray.normal, t));
+    ro = vec_minus(cy->point, rt);
+    h = vec_dot(ro, cy->normal);
+    if (0 <= h && h <= cy->height)
+        return (t);
+    else
+    {
+        if (h < 0)
+            tp = vec_dot(cy->normal, vec_minus(cy->point, ray.origin)) / vec_dot(cy->normal, ray.normal);
+        else
+            tp = vec_dot(cy->normal, vec_minus(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), ray.origin)) / vec_dot(cy->normal, ray.normal);
+        tp = fabs(tp);
+        if (tp > cy->radius)
+            return (-1);
+        return (tp);
+    }
+}
+
 double  hit_cylinder(t_cylinder *cy, t_ray ray)
 {
     t_vector    pc;
@@ -56,21 +81,16 @@ double  hit_cylinder(t_cylinder *cy, t_ray ray)
     c = vec_len2(vec_cross(pc, cy->normal)) - pow(cy->radius, 2);
     
     discriminant = (b * b) - (a * c);
-    printf("discriminant: %f\n", discriminant);
     if (discriminant < 0)
         return (-1);
-    return (1);
     t1 = (-b - sqrt(discriminant)) / a;
     t2 = (-b + sqrt(discriminant)) / a;
-    // printf("t1: %f\tt2: %f\n", t1, t2);
-    if (t1 < t2 && t2 > 0)
-        return (t2);
-    else if (t1 > t2 && t1 > 0)
-        return (t1);
+    if (t1 < t2 && t1 > 0)
+        return (hit_cylinder_cap(cy, ray, t1));
+    else if (t1 > t2 && t2 > 0)
+        return (hit_cylinder_cap(cy, ray, t2));
     else
         return (-1);
-   
-
 }
 
 t_object *hit_objects(t_info *info, t_ray ray)
