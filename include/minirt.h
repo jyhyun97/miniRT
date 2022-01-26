@@ -92,5 +92,6 @@ t_object    *hit_objects(t_info *info, t_ray ray);
 double      hit_sphere(t_sphere *sp, t_ray ray);
 double      hit_plane(t_plane *pl, t_ray ray);
 double      hit_cylinder(t_cylinder *cy, t_ray ray);
-
+int         set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min);
+t_vector    find_cylinder_normal(t_object *curr_ob, t_ray ray);
 #endif

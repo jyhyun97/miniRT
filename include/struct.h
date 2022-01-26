@@ -56,6 +56,8 @@ typedef struct  s_object
 {
     int         type;
     void        *figure;
+    t_vector    point;
+    t_vector    point_normal;
     struct s_object    *next;
 }   t_object;
 

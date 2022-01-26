@@ -93,6 +93,61 @@ double  hit_cylinder(t_cylinder *cy, t_ray ray)
         return (-1);
 }
 
+t_vector find_cylinder_normal(t_object *curr_ob, t_ray ray)
+{
+    t_vector    normal;
+    t_cylinder  *cy;
+    t_vector    oa;
+    double      len;
+    double      l;
+    
+    cy = curr_ob->figure;
+    oa = vec_minus(curr_ob->point, cy->point);// 원기둥 중심점에서 교점까지의 벡터
+    len = sqrt(vec_len2(vec_cross(oa, cy->normal)));// 교점과 원기둥 축의 최단거리
+    if (len < cy->radius)
+    {
+        if (sqrt(vec_len2(oa)) > cy->radius)// (윗뚜껑)
+            normal = cy->normal;
+        else// (아랫뚜껑)
+            normal = vec_mult_(cy->normal, -1);
+    }
+    else// (측면)
+    {
+        l = vec_dot(oa, cy->normal);// oa dot N = l
+        normal = vec_unit(vec_minus(curr_ob->point, vec_plus(cy->point, vec_mult_(cy->normal, l))));// BA = A - (o + l * N)
+    }
+    return (normal);
+}
+
+int set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
+{
+    t_sphere    *sp;
+    t_plane     *pl;
+
+    sp = NULL;
+    pl = NULL;
+    if (0 > *tmp_min || *tmp_min >= *min)
+        return (FALSE);
+    (*min) = (*tmp_min);
+    curr_ob->point = vec_plus(ray.origin, vec_mult_(ray.normal, *min));
+    if (curr_ob->type == SPHERE)
+    {
+        sp = curr_ob->figure;
+        curr_ob->point_normal = vec_unit(vec_minus(curr_ob->point, sp->point));
+    }
+    else if (curr_ob->type == PLANE)
+    {
+        pl = curr_ob->figure;
+        if (vec_dot(pl->normal, curr_ob->point) < 0)
+            curr_ob->point_normal = pl->normal;
+        else
+            curr_ob->point_normal = vec_mult_(pl->normal, -1);
+    }
+    else
+        curr_ob->point_normal = find_cylinder_normal(curr_ob, ray);
+    return (TRUE);
+}
+
 t_object *hit_objects(t_info *info, t_ray ray)
 {
     t_object    *rtn;
@@ -108,31 +163,23 @@ t_object *hit_objects(t_info *info, t_ray ray)
         if (curr_ob->type == SPHERE)
         {
             tmp_min = hit_sphere(curr_ob->figure, ray);//교점 double 리턴
-            if (0 <= tmp_min && tmp_min < min)
-            {
-                min = tmp_min;
+            if (set_hit_point(curr_ob, ray, &min, &tmp_min))
                 rtn = curr_ob;
-            }
         }
         else if (curr_ob->type == PLANE)
         {
             tmp_min = hit_plane(curr_ob->figure, ray);
-            if (0 <= tmp_min && tmp_min < min)
-            {
-                min = tmp_min;
+            if (set_hit_point(curr_ob, ray, &min, &tmp_min))
                 rtn = curr_ob;
-            }
         }
         else// CYLINDER
         {
             tmp_min = hit_cylinder(curr_ob->figure, ray);
-            if (0 <= tmp_min && tmp_min < min)
-            {
-                min = tmp_min;
+            if (set_hit_point(curr_ob, ray, &min, &tmp_min))
                 rtn = curr_ob;
-            }
         }
         curr_ob = curr_ob->next;
     }
+    
     return (rtn);
 }

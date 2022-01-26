@@ -15,21 +15,56 @@ t_ray   set_ray(t_cam cam, double u, double v)
     t_ray   ray;
 
     ray.origin = cam.origin;
-    //print_vector("ray origin", ray.origin);
     ray.normal = vec_unit(vec_minus(vec_plus(cam.left_bottom, 
          vec_plus(vec_mult_(cam.horizontal, u), 
          (vec_mult_(cam.vertical, v)))), ray.origin));
-    //오리진 - (바텀 + 수평 + 수직)
-    // print_vector("non_unit ray normal", vec_minus(vec_plus(cam.left_bottom, 
-    //      vec_plus(vec_mult_(cam.horizontal, u), 
-    //      (vec_mult_(cam.vertical, v)))), ray.origin));
-    // print_vector("set ray normal", ray.normal);
-    // while (1)
-    //     ;
     return (ray);
 }
 
-t_color choose_color(t_object *curr_ob)
+t_color ambient_light(t_info *info)
+{
+    t_color color;
+    color = vec_mult_(info->canvas->ambient_color, info->canvas->ambient);
+    return (color);
+}
+
+t_color diffuse_light(t_info *info, t_ray ray, t_object *curr_ob)
+{
+    t_color     color;
+    t_vector    light_dir;
+    t_vector    point;
+    t_vector    point_normal;
+    double      kd;
+
+
+    return (color);
+}
+
+t_color phong_model(t_info *info, t_ray ray, t_object *curr_ob)
+{
+    t_color color;
+    
+    (void)ray;
+    (void)curr_ob;
+    color = create_color(0, 0, 0);
+    color = vec_plus(color, ambient_light(info));
+    color = vec_plus(color, diffuse_light(info, ray, curr_ob));
+    // color = vec_plus(color, specular_light());
+    return (color);
+}
+
+/*
+    t_vec   diffuse;
+    t_vec   light_dir;
+    double  kd;
+
+    light_dir = unit_vec(sub_vec(light.origin, rec.p));//광원 ~ 교점 방향벡터
+    kd = fmax(dot_vec(rec.normal, light_dir), 0.0);//교점에서 접하는 평면에 법선벡터
+    diffuse = mul_vec_(light.light_color, kd);
+    return (diffuse);
+*/
+
+t_color render_color(t_object *curr_ob)
 {
     t_color     rtn;
     t_sphere    *sp;
@@ -79,9 +114,12 @@ void   set_image(t_img *img, t_info *info)
             ray = set_ray(cam, (double)w / (WIN_WIDTH - 1), (double)h / (WIN_HEIGHT - 1));
             curr_ob = hit_objects(info, ray);
             if (curr_ob)
-                color = choose_color(curr_ob);
+            {
+                // color = render_color(curr_ob);
+                color = phong_model(info, ray, curr_ob);
+            }
             else
-                color = create_vector(255, 255, 255);
+                color = create_vector(0, 0, 0);
             //오브젝트면 퐁라이트 해주고 색깔 반환
             //아니면 배경색/쉐도우 확인해서 색깔 반환
             //색깔 img에 pixel put
