@@ -26,6 +26,9 @@
 # define ESC_KEY   53
 # define EXIT_BUTTON 17
 
+# define SHININESS 64
+
+
 //-----------------util.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);
 size_t      ft_strlcpy(char *dst, const char *src, size_t size);
@@ -76,6 +79,7 @@ t_vector    vec_unit(t_vector vec);
 double      vec_dot(t_vector vec1, t_vector vec2);
 t_vector    vec_cross(t_vector vec1, t_vector vec2);
 double      vec_len2(t_vector vec);
+t_vector    vec_max(t_vector vec, double max);
 
 //-----------------rendering.c------------------
 int         rendering(t_info *info);
@@ -93,5 +97,5 @@ double      hit_sphere(t_sphere *sp, t_ray ray);
 double      hit_plane(t_plane *pl, t_ray ray);
 double      hit_cylinder(t_cylinder *cy, t_ray ray);
 int         set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min);
-t_vector    find_cylinder_normal(t_object *curr_ob, t_ray ray);
+t_vector    find_cylinder_normal(t_object *curr_ob);
 #endif

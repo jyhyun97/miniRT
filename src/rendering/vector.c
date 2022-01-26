@@ -94,3 +94,14 @@ double      vec_len2(t_vector vec)
 {
     return (vec_dot(vec, vec));
 }
+
+t_vector    vec_max(t_vector vec, double max)
+{
+    if (vec.x > max)
+        vec.x = max;
+    if (vec.y > max)
+        vec.y = max;
+    if (vec.z > max)
+        vec.z = max;
+    return (vec);
+}

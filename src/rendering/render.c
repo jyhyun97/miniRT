@@ -28,41 +28,44 @@ t_color ambient_light(t_info *info)
     return (color);
 }
 
-t_color diffuse_light(t_info *info, t_ray ray, t_object *curr_ob)
+t_color diffuse_light(t_info *info, t_object *curr_ob)
 {
     t_color     color;
     t_vector    light_dir;
-    t_vector    point;
-    t_vector    point_normal;
     double      kd;
 
-
+    light_dir = vec_unit(vec_minus(info->canvas->light.light_point, curr_ob->point));
+    kd = fmax(vec_dot(curr_ob->point_normal, light_dir), 0.0);
+    color = vec_mult_(info->canvas->light.color, kd);
     return (color);
+}
+
+t_color specular_light(t_info *info, t_ray ray, t_object *curr_ob)
+{
+    t_vector    light_dir;
+    t_vector    replect_dir;
+    t_vector    a;
+    t_vector    specular;
+    double      spec;
+
+    light_dir = vec_unit(vec_minus(info->canvas->light.light_point, curr_ob->point));// 빛의 방향
+    a = vec_mult_(curr_ob->point_normal, vec_dot(light_dir, curr_ob->point_normal));// 빛의 방향과 법선벡터와 내적한 값
+    replect_dir = vec_plus(vec_mult_(light_dir, -1), vec_mult_(a, 2));// 반사광 벡터
+    spec = pow(fmax(vec_dot(replect_dir, vec_mult_(ray.normal, -1)), 0.0), SHININESS);// (ray와 반사광의 내적값)^광택계수
+    specular = vec_mult_(vec_mult_(info->canvas->light.color, info->canvas->light.brightness), spec);//빛의 색깔 밝기 적용
+    return (specular);
 }
 
 t_color phong_model(t_info *info, t_ray ray, t_object *curr_ob)
 {
     t_color color;
     
-    (void)ray;
-    (void)curr_ob;
     color = create_color(0, 0, 0);
     color = vec_plus(color, ambient_light(info));
-    color = vec_plus(color, diffuse_light(info, ray, curr_ob));
-    // color = vec_plus(color, specular_light());
-    return (color);
+    color = vec_plus(color, diffuse_light(info, curr_ob));
+    color = vec_plus(color, specular_light(info, ray, curr_ob));
+    return (vec_max(color, 255));
 }
-
-/*
-    t_vec   diffuse;
-    t_vec   light_dir;
-    double  kd;
-
-    light_dir = unit_vec(sub_vec(light.origin, rec.p));//광원 ~ 교점 방향벡터
-    kd = fmax(dot_vec(rec.normal, light_dir), 0.0);//교점에서 접하는 평면에 법선벡터
-    diffuse = mul_vec_(light.light_color, kd);
-    return (diffuse);
-*/
 
 t_color render_color(t_object *curr_ob)
 {
@@ -115,8 +118,8 @@ void   set_image(t_img *img, t_info *info)
             curr_ob = hit_objects(info, ray);
             if (curr_ob)
             {
-                // color = render_color(curr_ob);
-                color = phong_model(info, ray, curr_ob);
+                //color = render_color(curr_ob);
+                color = phong_model(info, ray, curr_ob);                
             }
             else
                 color = create_vector(0, 0, 0);
