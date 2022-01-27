@@ -44,23 +44,28 @@ double  hit_cylinder_cap(t_cylinder *cy, t_ray ray, double t)
     t_vector    ro;
     double      h;
     double      tp;
-    
+    double      len;
+
     rt = vec_plus(ray.origin, vec_mult_(ray.normal, t));
-    ro = vec_minus(cy->point, rt);
+    ro = vec_minus(rt, cy->point);
     h = vec_dot(ro, cy->normal);
-    printf("h : %f\n", h);
     if (0 <= h && h <= cy->height)
         return (t);
     else
     {
         if (h < 0)
+        {
             tp = vec_dot(cy->normal, vec_minus(cy->point, ray.origin)) / vec_dot(cy->normal, ray.normal);
+            len = sqrt(vec_len2(vec_minus(cy->point, vec_plus(ray.origin, vec_mult_(ray.normal,tp)))));
+        }
         else
+        {
             tp = vec_dot(cy->normal, vec_minus(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), ray.origin)) / vec_dot(cy->normal, ray.normal);
-        tp = fabs(tp);
-        if (tp > cy->radius)
-            return (-1);
-        return (tp);
+            len = sqrt(vec_len2(vec_minus(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), vec_plus(ray.origin, vec_mult_(ray.normal,tp)))));
+        }
+        if (0 <= len && len <= cy->radius)
+            return (tp);
+        return (-1);
     }
 }
 
@@ -100,30 +105,30 @@ t_vector find_cylinder_normal(t_object *curr_ob)
     double      len;
     double      l;
     
+/*
+	t_v3 ctp;
+	t_v3 normal;
+
+	ctp = substract(point, cylinder.p);
+	normal = substract(ctp, v3_multiply(cylinder.normal, dot_product(cylinder.normal, ctp)));
+	normalize_vector(&normal);
+	return (normal);
+*/
+    
     cy = curr_ob->figure;
     oa = vec_minus(curr_ob->point, cy->point);// 원기둥 중심점에서 교점까지의 벡터
-    // print_vector("oa", oa);
-    // print_vector("cy->normal", cy->normal);
-    len = sqrt(vec_len2(vec_cross(oa, cy->normal)));// 교점과 원기둥 축의 최단거리
-    // printf("len : %f\n", len);
-    if (len < cy->radius)
+    len = sqrt(vec_len2(oa) - pow(vec_dot(oa, cy->normal), 2));// 교점과 원기둥 축의 최단거리
+    if (len < cy->radius - 0.00001)
     {
         if (sqrt(vec_len2(oa)) > cy->radius)// (윗뚜껑)
-        {
             normal = cy->normal;
-            //print_vector("top cap normal", normal);
-        }
         else// (아랫뚜껑)
-        {
             normal = vec_mult_(cy->normal, -1);
-            //print_vector("bottom cap normal", normal);
-        }
     }
     else// (측면)
     {
-        l = vec_dot(oa, cy->normal);// oa dot N = l
-        normal = vec_unit(vec_minus(curr_ob->point, vec_plus(cy->point, vec_mult_(cy->normal, l))));// BA = A - (o + l * N)
-        //print_vector("side normal", normal);
+        l = vec_dot(oa, cy->normal);// oa dot N = l (높이 구함)
+        normal = vec_unit(vec_minus(oa, vec_mult_(cy->normal, l)));// BA = A - (o + l * N)
     }
     return (normal);
 }
@@ -135,7 +140,7 @@ int set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
 
     sp = NULL;
     pl = NULL;
-    if (0 > *tmp_min || *tmp_min >= *min)
+    if (0 >= *tmp_min || *tmp_min >= *min)
         return (FALSE);
     (*min) = (*tmp_min);
     curr_ob->point = vec_plus(ray.origin, vec_mult_(ray.normal, *min));

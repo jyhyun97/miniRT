@@ -103,8 +103,6 @@ t_sphere    *create_sphere(t_vector point, double radius, t_color color)
     sp->color = color;
     sp->point = point;
     sp->radius = radius / 2;
-    // print_vector("sphere centor ", sp->point);
-    // printf("%f\n", sp->radius);
     return (sp);
 }
 
@@ -116,7 +114,7 @@ t_plane     *create_plane(t_vector point, t_vector normal, t_color color)
     if (!pl)
         return (NULL);
     pl->point = point;
-    pl->normal = normal;
+    pl->normal = vec_unit(normal);
     pl->color = color;
     return (pl);
 }
@@ -129,7 +127,7 @@ t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t
     if (!cy)
         return (NULL);
     cy->point = point;
-    cy->normal = normal;
+    cy->normal = vec_unit(normal);
     cy->radius = value[0] / 2;
     cy->height = value[1];
     cy->color = color;

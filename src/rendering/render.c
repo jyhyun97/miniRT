@@ -24,7 +24,9 @@ t_ray   set_ray(t_cam cam, double u, double v)
 t_color ambient_light(t_info *info)
 {
     t_color color;
+    
     color = vec_mult_(info->canvas->ambient_color, info->canvas->ambient);
+    print_vector("ambient_light", color);
     return (color);
 }
 
@@ -37,6 +39,7 @@ t_color diffuse_light(t_info *info, t_object *curr_ob)
     light_dir = vec_unit(vec_minus(info->canvas->light.light_point, curr_ob->point));
     kd = fmax(vec_dot(curr_ob->point_normal, light_dir), 0.0);
     color = vec_mult_(info->canvas->light.color, kd);
+    print_vector("diffuse_light", color);
     return (color);
 }
 
@@ -53,6 +56,7 @@ t_color specular_light(t_info *info, t_ray ray, t_object *curr_ob)
     replect_dir = vec_plus(vec_mult_(light_dir, -1), vec_mult_(a, 2));// 반사광 벡터
     spec = pow(fmax(vec_dot(replect_dir, vec_mult_(ray.normal, -1)), 0.0), SHININESS);// (ray와 반사광의 내적값)^광택계수
     specular = vec_mult_(vec_mult_(info->canvas->light.color, info->canvas->light.brightness), spec);//빛의 색깔 밝기 적용
+    print_vector("specular", specular);
     return (specular);
 }
 
@@ -64,9 +68,20 @@ t_color phong_model(t_info *info, t_ray ray, t_object *curr_ob)
     color = vec_plus(color, ambient_light(info));
     color = vec_plus(color, diffuse_light(info, curr_ob));
     color = vec_plus(color, specular_light(info, ray, curr_ob));
+    color = vec_mult_(color, info->canvas->light.brightness);
     return (vec_max(color, 255));
 }
+// t_vec   phong_lighting(t_light light, t_rec rec, t_ray ray)
+// {
+//     t_vec   light_color;
 
+//     light_color = make_vec(0, 0, 0);
+//     light_color = add_vec(light_color, rec.ambient);
+//     light_color = add_vec(light_color, diffuse_lighting(light, rec));
+//     light_color = add_vec(light_color, specular_lighting(light, rec, ray));
+//     light_color = mul_vec_(light_color, light.bright_ratio * LUMEN);
+//     return (min_vec(mul_vec(light_color, rec.albedo), make_vec(1, 1, 1)));
+// }
 t_color render_color(t_object *curr_ob)
 {
     t_color     rtn;
@@ -118,9 +133,16 @@ void   set_image(t_img *img, t_info *info)
             curr_ob = hit_objects(info, ray);
             if (curr_ob)
             {
-                //color = render_color(curr_ob);
-                color = phong_model(info, ray, curr_ob);                
+                color = render_color(curr_ob);
+                //light_color = mul_vec_(light_color, light.bright_ratio * LUMEN);
+                
+                color = vec_max(vec_mult_(vec_plus(color, phong_model(info, ray, curr_ob)), info->canvas->light.brightness), 255);
+                
+                // print_vector("phong", phong_model(info, ray, curr_ob));
+                //color = vec_mult(color, vec_unit(phong_model(info, ray, curr_ob)));
             }
+            //255 255 255
+            //
             else
                 color = create_vector(0, 0, 0);
             //오브젝트면 퐁라이트 해주고 색깔 반환
