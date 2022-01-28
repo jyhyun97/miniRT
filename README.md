@@ -68,11 +68,12 @@
       - [ x ] 평면
       - [ x ] 원기둥
 * 1.31[3주차]
-   - [ ] phong 모델
-      - [ ] ambient
-      - [ ] diffuse
-      - [ ] specular
+   - [ x ] phong 모델
+      - [ x ] ambient
+      - [ x ] diffuse
+      - [ x ] specular
    - [ ] shadow
+      - [ ] Noise 제거 필요
 * 2.7[4주차]
    - [ ] 리펙
 
@@ -241,4 +242,11 @@
 
 
    ```
-   
+
+## Hard shadows
+   ```
+      shadow ray의 origin은 curr_ob.point
+      normal은 light.Point - curr_ob.point
+      hit_object(info, shadowray)
+
+   ```

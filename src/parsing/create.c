@@ -42,21 +42,25 @@ t_cam    create_cam(t_camera camera)
     t_vector    u;
     t_vector    v;
     t_vector    w;
+    t_vector    vup;
 
-    cam.focal_length = 1;//
+    cam.focal_length = 1;
     cam.aspect_ratio = (double)((double)WIN_WIDTH / (double)WIN_HEIGHT);
     cam.viewport_h = cam.focal_length * 2 * tan(degree_to_radian(camera.fov / 2));
     cam.viewport_w = cam.viewport_h * cam.aspect_ratio;
     cam.origin = camera.origin;
     cam.normal = vec_unit(camera.normal);
+    vup = create_vector(0, 1, 0);
+    if (cam.normal.x == 0 && cam.normal.y != 0 && cam.normal.z == 0)
+        vup = create_vector(0, 0, 1);
     w = vec_mult_(cam.normal, -1);
-    u = vec_unit(vec_cross(w, create_vector(w.z, w.x, w.y)));//
-    v = vec_unit(vec_cross(w, u));
+    u = vec_unit(vec_cross(w, vup));
+    v = vec_unit(vec_cross(u, w));
     // print_vector("u", u);
     // print_vector("v", v);
 
-    cam.horizontal = vec_mult_(v, cam.viewport_w);
-    cam.vertical = vec_mult_(u, cam.viewport_h);
+    cam.horizontal = vec_mult_(u, cam.viewport_w);
+    cam.vertical = vec_mult_(v, cam.viewport_h);
     cam.left_bottom = vec_minus(cam.origin, vec_plus(vec_div_(cam.horizontal, 2), 
                                             vec_plus(vec_div_(cam.vertical, 2), 
                                             w)));
@@ -69,7 +73,6 @@ t_cam    create_cam(t_camera camera)
     // print_vector("cam.horizontal", cam.horizontal);
     // print_vector("cam.vertical", cam.vertical);
     // print_vector("cam.left_bottom", cam.left_bottom);
-    
     return (cam);
 }
 

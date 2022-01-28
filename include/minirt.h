@@ -27,7 +27,7 @@
 # define EXIT_BUTTON 17
 
 # define SHININESS 64
-
+# define ROUNDOFF 0.0001
 
 //-----------------util.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);

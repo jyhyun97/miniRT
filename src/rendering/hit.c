@@ -46,8 +46,8 @@ double  hit_cylinder_cap(t_cylinder *cy, t_ray ray, double t)
     double      tp;
     double      len;
 
-    rt = vec_plus(ray.origin, vec_mult_(ray.normal, t));
-    ro = vec_minus(rt, cy->point);
+    rt = vec_plus(ray.origin, vec_mult_(ray.normal, t));// 교점의 좌표
+    ro = vec_minus(rt, cy->point);// 원기둥의 중심에서 교점까지의 벡터
     h = vec_dot(ro, cy->normal);
     if (0 <= h && h <= cy->height)
         return (t);
@@ -89,12 +89,14 @@ double  hit_cylinder(t_cylinder *cy, t_ray ray)
         return (-1);
     t1 = (-b - sqrt(discriminant)) / a;
     t2 = (-b + sqrt(discriminant)) / a;
-    if (t1 < t2 && t1 > 0)
+    if ((t1 < t2 && t1 > 0) || (t1 > t2 && t2 < 0 && t1 > 0))
         return (hit_cylinder_cap(cy, ray, t1));
-    else if (t1 > t2 && t2 > 0)
+    else if ((t1 > t2 && t2 > 0) || (t2 > t1 && t1 < 0 && t2 > 0))
         return (hit_cylinder_cap(cy, ray, t2));
     else
+    {
         return (-1);
+    }
 }
 
 t_vector find_cylinder_normal(t_object *curr_ob)
@@ -105,24 +107,14 @@ t_vector find_cylinder_normal(t_object *curr_ob)
     double      len;
     double      l;
     
-/*
-	t_v3 ctp;
-	t_v3 normal;
-
-	ctp = substract(point, cylinder.p);
-	normal = substract(ctp, v3_multiply(cylinder.normal, dot_product(cylinder.normal, ctp)));
-	normalize_vector(&normal);
-	return (normal);
-*/
-    
     cy = curr_ob->figure;
     oa = vec_minus(curr_ob->point, cy->point);// 원기둥 중심점에서 교점까지의 벡터
     len = sqrt(vec_len2(oa) - pow(vec_dot(oa, cy->normal), 2));// 교점과 원기둥 축의 최단거리
-    if (len < cy->radius - 0.00001)
+    if (len < cy->radius - ROUNDOFF)
     {
-        if (sqrt(vec_len2(oa)) > cy->radius)// (윗뚜껑)
+        if (sqrt(vec_len2(oa)) > cy->height + ROUNDOFF)// (윗뚜껑)
             normal = cy->normal;
-        else// (아랫뚜껑)
+        else// (아래뚜껑)
             normal = vec_mult_(cy->normal, -1);
     }
     else// (측면)
@@ -152,10 +144,13 @@ int set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
     else if (curr_ob->type == PLANE)
     {
         pl = curr_ob->figure;
-        if (vec_dot(pl->normal, curr_ob->point) < 0)
+        if (vec_dot(pl->normal, curr_ob->point) < ROUNDOFF)
             curr_ob->point_normal = pl->normal;
         else
+        {
             curr_ob->point_normal = vec_mult_(pl->normal, -1);
+            //printf("aaa");
+        }
     }
     else
         curr_ob->point_normal = find_cylinder_normal(curr_ob);
