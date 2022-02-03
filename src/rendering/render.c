@@ -26,7 +26,6 @@ t_color ambient_light(t_info *info)
     t_color color;
     
     color = vec_mult_(info->canvas->ambient_color, info->canvas->ambient);
-    // print_vector("ambient_light", color);
     return (color);
 }
 
@@ -61,27 +60,24 @@ t_color specular_light(t_info *info, t_ray ray, t_object *curr_ob)
 int is_shadow(t_info *info, t_object *curr_ob)
 {
     t_ray shadow;
-    t_object *tmp;
+
     shadow.origin = curr_ob->point;
-    shadow.normal = vec_minus(info->canvas->light.light_point, curr_ob->point);
-    tmp = hit_objects(info, shadow);
-    if (tmp != NULL && tmp != curr_ob)
+    shadow.normal = vec_unit(vec_minus(info->canvas->light.light_point, curr_ob->point));
+    if (hit_shadow_ray(info, shadow, curr_ob))
         return (TRUE);
     return (FALSE);
-    // if (is_shadow(info, curr_ob) == TRUE)//shadow ray의 origin은 curr_ob.point, 방향은 light.Point - curr_ob.point 이 레이 가지고 hit_object(info, shadowray)
-    //  return (color);
 }
 
 t_color phong_model(t_info *info, t_ray ray, t_object *curr_ob)
 {
     t_color color;
-    
-    (void)ray;
-    (void)curr_ob;
+
     color = ambient_light(info);
     color = vec_plus(color, diffuse_light(info, curr_ob));
     color = vec_plus(color, specular_light(info, ray, curr_ob));
     color = vec_mult_(color, info->canvas->light.brightness);
+    if (is_shadow(info, curr_ob) == TRUE)
+        color = ambient_light(info);
     return (vec_max(color, 255));
 }
 
@@ -134,7 +130,7 @@ void   set_image(t_img *img, t_info *info)
             ray = set_ray(cam, (double)w / (WIN_WIDTH - 1), (double)h / (WIN_HEIGHT - 1));
             curr_ob = hit_objects(info, ray);
             
-            if (curr_ob)/* && is_shadow(info, curr_ob) == FALSE)*/
+            if (curr_ob)
             {
                 // color = render_color(curr_ob);// 0~255 -> 0~1
                 // color = vec_max(vec_plus(color, phong_model(info, ray, curr_ob)), 255);

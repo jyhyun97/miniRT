@@ -27,7 +27,7 @@
 # define EXIT_BUTTON 17
 
 # define SHININESS 64
-# define ROUNDOFF 0.0001
+# define ROUNDOFF 0.0000000001
 
 //-----------------util.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);
@@ -93,6 +93,7 @@ void    print_vector(char *str, t_vector vec);
 
 //-----------------hit.c------------------
 t_object    *hit_objects(t_info *info, t_ray ray);
+int         hit_shadow_ray(t_info *info, t_ray ray, t_object *curr_ob);
 double      hit_sphere(t_sphere *sp, t_ray ray);
 double      hit_plane(t_plane *pl, t_ray ray);
 double      hit_cylinder(t_cylinder *cy, t_ray ray);

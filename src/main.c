@@ -24,7 +24,8 @@ void    free_info(t_info **info)
 void    put_err(char *str, t_info *info)
 {
     printf("%s\n", str);
-    free_info(&info);
+    if (info)
+        free_info(&info);
     exit(ERROR);
 }
 
@@ -160,14 +161,14 @@ int main(int argc, char **argv)
 
     info = 0;
     if (argc != 2 || ft_strcmp(argv[1] + ft_strlen(argv[1]) - 3, ".rt") != 0)
-        put_err("Input Error\n", info);
+        put_err("Input Error", info);
     info = init_info();
     if (!info)
-        put_err("Init Error\n", info);
+        put_err("Init Error", info);
     else if (!parsing(argv[1], info))
-        put_err("Parsing Error\n", info);
+        put_err("Parsing Error", info);
     else if (!rendering(info))
-        put_err("rendering Error\n", info);
+        put_err("rendering Error", info);
     // print_info(info);
     free_info(&info);
     system("leaks miniRT");
