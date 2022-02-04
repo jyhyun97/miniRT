@@ -41,35 +41,29 @@ double  hit_plane(t_plane *pl, t_ray ray)
 double  hit_cylinder_cap(t_cylinder *cy, t_ray ray, double t)
 {
     t_vector    rt;
-    t_vector    ro;
     double      h;
     double      tp;
     double      len;
 
     rt = vec_plus(ray.origin, vec_mult_(ray.normal, t));// 교점의 좌표
-    ro = vec_minus(rt, cy->point);// 원기둥의 중심에서 교점까지의 벡터
-    h = vec_dot(ro, cy->normal);
-    if (0 < h && h < cy->height - ROUNDOFF)
+    h = vec_dot(vec_minus(rt, cy->point), cy->normal);
+    tp = hit_plane(cy->top, ray);
+    if (tp != -1 && vec_dot(cy->top->normal, ray.normal) <= 0)
     {
-        printf("h %f\n", h);
-        return (t);
-    }
-    else
-    {
-        if (h < 0)
-        {
-            tp = vec_dot(cy->normal, vec_minus(cy->point, ray.origin)) / vec_dot(cy->normal, ray.normal);
-            len = sqrt(vec_len2(vec_minus(cy->point, vec_plus(ray.origin, vec_mult_(ray.normal,tp)))));
-        }
-        else
-        {
-            tp = vec_dot(cy->normal, vec_minus(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), ray.origin)) / vec_dot(cy->normal, ray.normal);
-            len = vec_len2(vec_minus(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), vec_plus(ray.origin, vec_mult_(ray.normal,tp))));
-        }
+        len = vec_len2(vec_minus(cy->top->point, vec_plus(ray.origin, vec_mult_(ray.normal, tp))));
         if (len <= pow(cy->radius, 2))
             return (tp);
-        return (-1);
     }
+    tp = hit_plane(cy->bottom, ray);
+    if (tp != -1 && vec_dot(cy->bottom->normal, ray.normal) <= 0)
+    {
+        len = vec_len2(vec_minus(cy->bottom->point, vec_plus(ray.origin, vec_mult_(ray.normal, tp))));
+        if (len <= pow(cy->radius, 2))
+            return (tp);
+    }
+    if (0 < h && h < cy->height)
+        return (t);
+    return (-1);
 }
 
 double  hit_cylinder(t_cylinder *cy, t_ray ray)
@@ -92,6 +86,7 @@ double  hit_cylinder(t_cylinder *cy, t_ray ray)
         return (-1);
     t1 = (-b - sqrt(discriminant)) / a;
     t2 = (-b + sqrt(discriminant)) / a;
+    
     if (t1 <= 0)
     {
         if (t2 <= 0)
@@ -124,38 +119,23 @@ t_vector find_cylinder_normal(t_object *curr_ob)
     
     cy = curr_ob->figure;
     oa = vec_minus(curr_ob->point, cy->point);// 원기둥 중심점에서 교점까지의 벡터
-    // len = sqrt(vec_len2(oa) - pow(vec_dot(oa, cy->normal), 2));// 교점과 원기둥 축의 최단거리
-    // printf("len : %0.30f\n", len);
-    // printf("radius : %0.30f\n", cy->radius);
+    len = sqrt(vec_len2(oa) - pow(vec_dot(oa, cy->normal), 2));// 교점과 원기둥 축의 최단거리
 
 
-    len = vec_dot(oa, cy->normal);
-    //printf("len %f\n", len);
-    if (len > cy->height - ROUNDOFF)// [윗뚜껑]
-        normal = cy->normal;
-    else if (len < ROUNDOFF)// [아래뚜껑]
-        normal = vec_mult_(cy->normal, -1);
-    else// [측면]
+    if (len <= cy->radius - ROUNDOFF)//- 측면, + 윗뚜껑
     {
-        l = vec_dot(oa, cy->normal);// oa dot N = l (높이 구함)
-        normal = vec_unit(vec_minus(oa, vec_mult_(cy->normal, l)));// BA = A - (o + l * N)
+        if (sqrt(vec_len2(oa)) > cy->height - ROUNDOFF)// (윗뚜껑)
+            normal = cy->normal;
+        else
+            normal = vec_mult_(cy->normal, -1);
+        return (normal);
     }
-
-
-    // if (len <= cy->radius - ROUNDOFF)//- 측면, + 윗뚜껑
-    // {
-    //     if (sqrt(vec_len2(oa)) > cy->height - ROUNDOFF)// (윗뚜껑)
-    //         normal = cy->normal;
-    //     else
-    //         normal = vec_mult_(cy->normal, -1);
-    //     return (normal);
-    // }
-    // l = vec_dot(oa, cy->normal);// oa dot N = l (높이 구함)
-    // normal = vec_unit(vec_minus(oa, vec_mult_(cy->normal, l)));// BA = A - (o + l * N)
+    l = vec_dot(oa, cy->normal);// oa dot N = l (높이 구함)
+    normal = vec_unit(vec_minus(oa, vec_mult_(cy->normal, l)));// BA = A - (o + l * N)
     return (normal);
 }
 
-int set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
+int find_point_normal(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
 {
     t_sphere    *sp;
     t_plane     *pl;
@@ -177,10 +157,7 @@ int set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
         if (vec_dot(pl->normal, curr_ob->point) < ROUNDOFF)
             curr_ob->point_normal = pl->normal;
         else
-        {
             curr_ob->point_normal = vec_mult_(pl->normal, -1);
-            //printf("aaa");
-        }
     }
     else
         curr_ob->point_normal = find_cylinder_normal(curr_ob);
@@ -202,19 +179,19 @@ t_object *hit_objects(t_info *info, t_ray ray)
         if (curr_ob->type == SPHERE)
         {
             tmp_min = hit_sphere(curr_ob->figure, ray);//교점 double 리턴
-            if (set_hit_point(curr_ob, ray, &min, &tmp_min))
+            if (find_point_normal(curr_ob, ray, &min, &tmp_min))
                 rtn = curr_ob;
         }
         else if (curr_ob->type == PLANE)
         {
             tmp_min = hit_plane(curr_ob->figure, ray);
-            if (set_hit_point(curr_ob, ray, &min, &tmp_min))
+            if (find_point_normal(curr_ob, ray, &min, &tmp_min))
                 rtn = curr_ob;
         }
         else// CYLINDER
         {
             tmp_min = hit_cylinder(curr_ob->figure, ray);
-            if (set_hit_point(curr_ob, ray, &min, &tmp_min))
+            if (find_point_normal(curr_ob, ray, &min, &tmp_min))
                 rtn = curr_ob;
         }
         curr_ob = curr_ob->next;

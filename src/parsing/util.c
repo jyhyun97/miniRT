@@ -1,5 +1,10 @@
 #include "../../include/minirt.h"
 
+double  degree_to_radian(int degree)
+{
+    return (degree * M_PI / 180);
+}
+
 int ft_strcmp(const char *s1, const char *s2)
 {
 	int	i;
@@ -67,22 +72,7 @@ int				ft_atoi(const char *str)
 	return (rst * pmsign);
 }
 
-static double	ft_pow(double a, double b)
-{
-	double	rst;
-	int		i;
-
-	rst = 1;
-	i = 0;
-	while (i < (int)b)
-	{
-		rst *= a;
-		i++;
-	}
-	return (rst);
-}
-
-double          ft_atod_abs(char *s, double rst, int i)
+static double	ft_atod_abs(char *s, double rst, int i)
 {
     int j;
 
@@ -97,7 +87,7 @@ double          ft_atod_abs(char *s, double rst, int i)
         j = 1;
         while (s[i] != '\0')
         {
-            rst = rst + ((double)(s[i] - '0') / ft_pow(10, j));
+            rst = rst + ((double)(s[i] - '0') / pow(10, j));
             i++;
             j++;
         }

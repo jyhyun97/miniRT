@@ -1,41 +1,5 @@
 #include "../../include/minirt.h"
 
-double  degree_to_radian(int degree)
-{
-    return (degree * M_PI / 180);
-}
-
-/*
-class camera {
-public:
-  camera(
-    point3  lookfrom,
-    point3  lookat,
-    vec3    vup,
-    double  vfov,     // vertical field-of-view in degrees
-    double  aspect_ratio
-  ) {
-    auto theta = degrees_to_radians(vfov);
-    auto h = tan(theta / 2);
-    auto viewport_height = 2.0 * h;
-    auto viewport_width = aspect_ratio * viewport_height;
-
-    auto w = unit_vector(lookfrom - lookat);
-    auto u = unit_vector(cross(vup, w));
-    auto v = cross(w, u);
-
-    origin = lookfrom;
-    horizontal = viewport_width * u;
-    vertical = viewport_height * v;
-    lower_left_corner = origin - horizontal / 2 - vertical / 2 - w;
-  }
-
-  ray get_ray(double s, double t) const {
-    return (ray(origin, lower_left_corner + s * horizontal + t * vertical - origin));
-  }
-
-*/
-
 t_cam    create_cam(t_camera camera)
 {
     t_cam       cam;
@@ -56,8 +20,6 @@ t_cam    create_cam(t_camera camera)
     w = vec_mult_(cam.normal, -1);
     u = vec_unit(vec_cross(w, vup));
     v = vec_unit(vec_cross(u, w));
-    // print_vector("u", u);
-    // print_vector("v", v);
 
     cam.horizontal = vec_mult_(u, cam.viewport_w);
     cam.vertical = vec_mult_(v, cam.viewport_h);
@@ -65,14 +27,6 @@ t_cam    create_cam(t_camera camera)
                                             vec_plus(vec_div_(cam.vertical, 2), 
                                             w)));
     
-    // printf("cam.AR %f\n", cam.aspect_ratio);
-    // printf("cam.view_port_h %f\n", cam.viewport_h);
-    // printf("cam.view_port_w %f\n", cam.viewport_w);
-    // print_vector("cam.origin", cam.origin);
-    // print_vector("cam.normal", cam.normal);
-    // print_vector("cam.horizontal", cam.horizontal);
-    // print_vector("cam.vertical", cam.vertical);
-    // print_vector("cam.left_bottom", cam.left_bottom);
     return (cam);
 }
 
@@ -134,6 +88,8 @@ t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t
     cy->radius = value[0] / 2;
     cy->height = value[1];
     cy->color = color;
+    cy->top = create_plane(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), cy->normal, cy->color);
+    cy->bottom = create_plane(cy->point, vec_mult_(cy->normal, -1), cy->color);
     return (cy);
 }
 

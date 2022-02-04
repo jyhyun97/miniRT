@@ -1,16 +1,22 @@
 NAME = miniRT
 FLAGS = -Wall -Wextra -Werror# -fsanitize=address
 SRCS_C = main.c\
-		parsing/get_next_line.c\
+		parsing/check.c\
+		parsing/create.c\
 		parsing/get_next_line_utils.c\
-		parsing/util.c\
+		parsing/get_next_line.c\
+		parsing/info.c\
+		parsing/phong.c\
+		parsing/set_object.c\
 		parsing/set.c\
 		parsing/split.c\
-		parsing/create.c\
-		parsing/check.c\
+		parsing/util.c\
+		rendering/hit.c\
+		rendering/mlx_util.c\
 		rendering/render.c\
-		rendering/vector.c\
-		rendering/hit.c
+		rendering/vector1.c\
+		rendering/vector2.c\
+		print.c
 SRCS = $(addprefix src/, $(SRCS_C))
 
 OBJS = $(SRCS:.c=.o)

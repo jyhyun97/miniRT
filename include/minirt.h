@@ -36,67 +36,94 @@ int         is_digit(int c);
 int			ft_atoi(const char *str);
 double      ft_atod(char *s);
 int         ft_strslen(char **strs);
+double      degree_to_radian(int degree);
 
 //-----------------split.c---------------------
 char        **allo_free(char **rst);
 char        **ft_split(char const *s, char c);
 
 //-----------------create.c---------------------
+t_cam       create_cam(t_camera camera);
 t_vector    create_vector(double x, double y, double z);
 t_color     create_color(double x, double y, double z);
 t_sphere    *create_sphere(t_vector point, double radius, t_color color);
 t_plane     *create_plane(t_vector point, t_vector normal, t_color color);
 t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t_color color);
 t_object    *create_object(int type, void *figure);
-t_cam       create_cam(t_camera camera);
 
 //-----------------check.c---------------------
-int check_int(char *str);
-int check_double(char *str);
-int check_vector(char **element);
-int check_color(t_color color);
-int check_normal(t_vector normal);
+int         check_int(char *str);
+int         check_double(char *str);
+int         check_vector(char **element);
+int         check_color(t_color color);
+int         check_normal(t_vector normal);
 
 //-----------------set.c---------------------
-void    push_object(t_info *info, t_object *object);
-int     set_ambient(t_canvas *canvas, char **split);
-int     set_camera(t_canvas *canvas, char **split);
-int     set_light(t_canvas *canvas, char **split);
-int     set_plane(t_info *info, char **split);
-int     set_sphere(t_info *info, char **split);
-int     set_cylinder(t_info *info, char **split);
+int         set_ambient(t_canvas *canvas, char **split);
+int         set_camera(t_canvas *canvas, char **split);
+int         set_light(t_canvas *canvas, char **split);
+t_ray       set_ray(t_cam cam, double u, double v);
 
-//-----------------vector.c---------------------
+//-----------------set_object.c---------------------
+void        push_object(t_info *info, t_object *object);
+int         set_plane(t_info *info, char **split);
+int         set_sphere(t_info *info, char **split);
+int         set_cylinder(t_info *info, char **split);
+
+//-----------------hit.c------------------
+double      hit_sphere(t_sphere *sp, t_ray ray);
+double      hit_plane(t_plane *pl, t_ray ray);
+double      hit_cylinder_cap(t_cylinder *cy, t_ray ray, double t);
+double      hit_cylinder(t_cylinder *cy, t_ray ray);
+t_vector    find_cylinder_normal(t_object *curr_ob);
+int         find_point_normal(t_object *curr_ob, t_ray ray, double *min, double *tmp_min);
+t_object    *hit_objects(t_info *info, t_ray ray);
+int         hit_shadow_ray(t_info *info, t_ray ray, t_object *curr_ob);
+
+//-----------------render.c------------------
+t_color     render_color(t_object *curr_ob);
+void        draw_image(t_img *img, t_info *info);
+int         rendering(t_info *info);
+
+//-----------------mlx_util.c------------------
+void        my_mlx_pixel_put(t_img *img, t_color color, int x, int y);
+int         press_X(t_info *info);
+int         exit_mlx(int keycode, t_info *info);
+
+//-----------------phong.c------------------
+t_color     ambient_light(t_info *info);
+t_color     diffuse_light(t_info *info, t_object *curr_ob);
+t_color     specular_light(t_info *info, t_ray ray, t_object *curr_ob);
+int         is_shadow(t_info *info, t_object *curr_ob);
+t_color     phong_model(t_info *info, t_ray ray, t_object *curr_ob);
+
+//-----------------vector1.c---------------------
 t_vector    vec_plus(t_vector vec1, t_vector vec2);
-t_vector    vec_plus_(t_vector vec1, double t);
 t_vector    vec_minus(t_vector vec1, t_vector vec2);
-t_vector    vec_minus_(t_vector vec1, double t);
 t_vector    vec_mult(t_vector vec1, t_vector vec2);
 t_vector    vec_mult_(t_vector vec1, double t);
-t_vector    vec_div(t_vector vec1, t_vector vec2);
 t_vector    vec_div_(t_vector vec1, double t);
+
+//-----------------vector2.c---------------------
 t_vector    vec_unit(t_vector vec);
 double      vec_dot(t_vector vec1, t_vector vec2);
 t_vector    vec_cross(t_vector vec1, t_vector vec2);
 double      vec_len2(t_vector vec);
 t_vector    vec_max(t_vector vec, double max);
 
-//-----------------rendering.c------------------
-int         rendering(t_info *info);
-void        my_mlx_pixel_put(t_img *img, t_color color, int x, int y);
-t_ray       set_ray(t_cam cam, double u, double v);
-void        set_image(t_img *img, t_info *info);
-
 //-----------------main.c------------------
-void    free_info(t_info **info);
-void    print_vector(char *str, t_vector vec);
+void        put_err(char *str, t_info *info);
+int         parsing(char *file, t_info *info);
 
-//-----------------hit.c------------------
-t_object    *hit_objects(t_info *info, t_ray ray);
-int         hit_shadow_ray(t_info *info, t_ray ray, t_object *curr_ob);
-double      hit_sphere(t_sphere *sp, t_ray ray);
-double      hit_plane(t_plane *pl, t_ray ray);
-double      hit_cylinder(t_cylinder *cy, t_ray ray);
-int         set_hit_point(t_object *curr_ob, t_ray ray, double *min, double *tmp_min);
-t_vector    find_cylinder_normal(t_object *curr_ob);
+//-----------------info.c------------------
+void        free_info(t_info **info);
+t_info      *init_info(void);
+int         save_info(t_info *info, char **split);
+int         line_to_info(t_info *info, char *line);
+
+//-----------------print.c------------------
+void        print_vector(char *str, t_vector vec);
+void        print_object(t_object *object);
+void        print_info(t_info *info);
+
 #endif
