@@ -29,14 +29,24 @@
 # define SHININESS 64
 # define ROUNDOFF 0.0000000001
 
-//-----------------util.c---------------------
+# define A 0
+# define B 1
+# define C 2
+# define DISCRIMINANT 3
+# define TOP 0
+# define BOTTOM 1
+
+//-----------------util1.c---------------------
 int         ft_strcmp(const char *s1, const char *s2);
 size_t      ft_strlcpy(char *dst, const char *src, size_t size);
 int         is_digit(int c);
-int			ft_atoi(const char *str);
-double      ft_atod(char *s);
 int         ft_strslen(char **strs);
 double      degree_to_radian(int degree);
+
+//-----------------util2.c---------------------
+int			ft_atoi(const char *str);
+double      ft_atod(char *s);
+
 
 //-----------------split.c---------------------
 char        **allo_free(char **rst);
@@ -60,34 +70,46 @@ int         check_normal(t_vector normal);
 
 //-----------------set.c---------------------
 int         set_ambient(t_canvas *canvas, char **split);
+int         camera_error_check(char **view, char **norm, char **split);
 int         set_camera(t_canvas *canvas, char **split);
 int         set_light(t_canvas *canvas, char **split);
 t_ray       set_ray(t_cam cam, double u, double v);
 
 //-----------------set_object.c---------------------
 void        push_object(t_info *info, t_object *object);
+
+//-----------------set_plane.c---------------------
+int         free_plane_element(char **point, char **normal, char **color);
+int         push_plane(t_info *info, t_plane *plane);
 int         set_plane(t_info *info, char **split);
+
+//-----------------set_sphere.c---------------------
 int         set_sphere(t_info *info, char **split);
+
+//-----------------set_cylinder.c---------------------
 int         set_cylinder(t_info *info, char **split);
 
 //-----------------hit.c------------------
+t_vector    find_cylinder_normal(t_object *curr_ob);
+int         find_normal(t_object *curr_ob, t_ray ray, double *min, double *tmp_min);
+t_object    *hit_objects(t_info *info, t_ray ray);
+int         hit_shadow_ray(t_info *info, t_ray ray, t_object *curr_ob);
+
+//-----------------hit_object.c------------------
 double      hit_sphere(t_sphere *sp, t_ray ray);
 double      hit_plane(t_plane *pl, t_ray ray);
 double      hit_cylinder_cap(t_cylinder *cy, t_ray ray, double t);
 double      hit_cylinder(t_cylinder *cy, t_ray ray);
-t_vector    find_cylinder_normal(t_object *curr_ob);
-int         find_point_normal(t_object *curr_ob, t_ray ray, double *min, double *tmp_min);
-t_object    *hit_objects(t_info *info, t_ray ray);
-int         hit_shadow_ray(t_info *info, t_ray ray, t_object *curr_ob);
 
 //-----------------render.c------------------
 t_color     render_color(t_object *curr_ob);
+t_color		choose_color(t_info *info, t_ray ray, t_object *curr_ob);
 void        draw_image(t_img *img, t_info *info);
 int         rendering(t_info *info);
 
 //-----------------mlx_util.c------------------
 void        my_mlx_pixel_put(t_img *img, t_color color, int x, int y);
-int         press_X(t_info *info);
+int         press_x(t_info *info);
 int         exit_mlx(int keycode, t_info *info);
 
 //-----------------phong.c------------------

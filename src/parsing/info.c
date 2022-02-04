@@ -16,8 +16,8 @@ void    free_info(t_info **info)
             if (curr->type == CYLINDER)
             {
                 tmp = curr->figure;
-                free(tmp->top);
-                free(tmp->bottom);
+                free(tmp->cap[TOP]);
+                free(tmp->cap[BOTTOM]);
             }
             prev = curr;
             curr = prev->next;

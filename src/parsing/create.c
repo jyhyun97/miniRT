@@ -88,8 +88,8 @@ t_cylinder  *create_cylinder(t_vector point, t_vector normal, double value[2], t
     cy->radius = value[0] / 2;
     cy->height = value[1];
     cy->color = color;
-    cy->top = create_plane(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), cy->normal, cy->color);
-    cy->bottom = create_plane(cy->point, vec_mult_(cy->normal, -1), cy->color);
+    cy->cap[TOP] = create_plane(vec_plus(cy->point, vec_mult_(cy->normal, cy->height)), cy->normal, cy->color);
+    cy->cap[BOTTOM] = create_plane(cy->point, vec_mult_(cy->normal, -1), cy->color);
     return (cy);
 }
 

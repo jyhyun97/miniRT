@@ -8,9 +8,14 @@ SRCS_C = main.c\
 		parsing/info.c\
 		parsing/phong.c\
 		parsing/set_object.c\
+		parsing/set_plane.c\
+		parsing/set_sphere.c\
+		parsing/set_cylinder.c\
 		parsing/set.c\
 		parsing/split.c\
-		parsing/util.c\
+		parsing/util1.c\
+		parsing/util2.c\
+		rendering/hit_object.c\
 		rendering/hit.c\
 		rendering/mlx_util.c\
 		rendering/render.c\
