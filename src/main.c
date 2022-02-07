@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 13:15:31 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/04 13:19:04 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:44:34 by byeukim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	put_err(char *str, t_info *info)
 {
-	printf("%s\n", str);
+	printf("Error\n%s\n", str);
 	if (info)
 		free_info(&info);
 	exit(ERROR);
@@ -28,9 +28,6 @@ int	parsing(char *file, t_info *info)
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		put_err("File open error", info);
-	info->canvas = malloc(sizeof(t_canvas));
-	if (!info->canvas)
-		return (FALSE);
 	while (get_next_line(fd, &line) > 0)
 		if (line_to_info(info, line) == FALSE)
 			return (FALSE);

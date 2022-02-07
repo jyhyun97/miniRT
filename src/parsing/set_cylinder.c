@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 14:26:32 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/07 10:31:59 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 13:25:38 by byeukim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	push_cylinder(t_info *info, t_cylinder *cylinder)
 	object = NULL;
 	if (!cylinder)
 		return (ERROR);
-	if (check_normal(cylinder->normal) == FALSE
-		|| check_color(cylinder->color) == FALSE)
+	if (check_color(cylinder->color) == FALSE)
 	{
+		printf("what\n");
 		free(cylinder);
 		return (ERROR);
 	}
@@ -52,7 +52,8 @@ int	set_cylinder(t_info *info, char **split)
 	value[1] = ft_atod(split[3]);
 	clr = ft_split(split[4], ',');
 	if (!pnt || !nor || !clr || (0 >= value[0]) || (0 >= value[1])
-		|| !check_vector(pnt) || !check_vector(nor) || !check_vector(clr))
+		|| !check_vector(pnt) || !check_vector(nor) || !check_vector(clr)
+		|| !check_normal(nor))
 		return (free_element(pnt, nor, clr));
 	cylinder = create_cylinder(
 			create_vector(ft_atod(pnt[0]), ft_atod(pnt[1]), ft_atod(pnt[2])),

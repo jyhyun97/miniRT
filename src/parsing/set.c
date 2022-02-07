@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 14:06:57 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/04 14:19:54 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:17:29 by byeukim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	set_ambient(t_canvas *canvas, char **split)
 	char	**element;
 	t_color	color;
 
-	if (ft_strslen(split) != 2 && !check_double(split[0]))
+	if (ft_strslen(split) != 2 || !check_double(split[0]))
 		return (ERROR);
 	element = ft_split(split[1], ',');
 	if (!check_vector(element))
@@ -29,7 +29,7 @@ int	set_ambient(t_canvas *canvas, char **split)
 	color = create_color(ft_atod(element[0]),
 			ft_atod(element[1]), ft_atod(element[2]));
 	allo_free(element);
-	if ((0.0 > canvas->ambient || canvas->ambient > 1.0) && !check_color(color))
+	if (0.0 > canvas->ambient || canvas->ambient > 1.0 || !check_color(color))
 		return (ERROR);
 	canvas->ambient_color = color;
 	return (SUCCESS);
@@ -81,11 +81,11 @@ int	set_light(t_canvas *canvas, char **split)
 	char	**point;
 	char	**color;
 
-	if (ft_strslen(split) != 3 && !check_double(split[1]))
+	if (ft_strslen(split) != 3 || !check_double(split[1]))
 		return (ERROR);
 	point = ft_split(split[0], ',');
 	color = ft_split(split[2], ',');
-	if (!point && !color && !check_vector(point) && !check_vector(color))
+	if (!point || !color || !check_vector(point) || !check_vector(color))
 	{
 		allo_free(point);
 		allo_free(color);

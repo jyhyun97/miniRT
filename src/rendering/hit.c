@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 13:32:52 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/04 14:01:46 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:12:30 by byeukim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ int	find_normal(t_object *curr_ob, t_ray ray, double *min, double *tmp_min)
 	else if (curr_ob->type == PLANE)
 	{
 		pl = curr_ob->figure;
-		if (vec_dot(pl->normal, curr_ob->point) < ROUNDOFF)
-			curr_ob->point_normal = pl->normal;
-		else
-			curr_ob->point_normal = vec_mult_(pl->normal, -1);
+		curr_ob->point_normal = pl->normal;
+		if (vec_dot(pl->normal,
+				vec_minus(curr_ob->point, ray.origin)) > ROUNDOFF)
+			curr_ob->point_normal = vec_mult_(curr_ob->point_normal, -1);
 	}
 	else
 		curr_ob->point_normal = find_cylinder_normal(curr_ob);

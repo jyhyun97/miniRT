@@ -21,8 +21,7 @@ SRCS_C = main.c\
 		rendering/mlx_util.c\
 		rendering/render.c\
 		rendering/vector1.c\
-		rendering/vector2.c\
-		print.c
+		rendering/vector2.c
 SRCS = $(addprefix src/, $(SRCS_C))
 
 OBJS = $(SRCS:.c=.o)

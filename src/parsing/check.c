@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 10:54:13 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/07 10:54:49 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:14:10 by byeukim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,20 @@ int	check_color(t_color color)
 	return (TRUE);
 }
 
-int	check_normal(t_vector normal)
+int	check_normal(char **normal)
 {
-	if (-1.0 > normal.x || normal.x > 1.0)
+	double	x;
+	double	y;
+	double	z;
+
+	x = ft_atod(normal[0]);
+	y = ft_atod(normal[1]);
+	z = ft_atod(normal[2]);
+	if (-1.0 > x || x > 1.0)
 		return (FALSE);
-	else if (-1.0 > normal.y || normal.y > 1.0)
+	else if (-1.0 > y || y > 1.0)
 		return (FALSE);
-	else if (-1.0 > normal.z || normal.z > 1.0)
+	else if (-1.0 > z || z > 1.0)
 		return (FALSE);
 	return (TRUE);
 }

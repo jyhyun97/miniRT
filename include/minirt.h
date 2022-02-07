@@ -6,7 +6,7 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 10:56:58 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/07 10:59:18 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:48:17 by byeukim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int			check_int(char *str);
 int			check_double(char *str);
 int			check_vector(char **element);
 int			check_color(t_color color);
-int			check_normal(t_vector normal);
+int			check_normal(char **normal);
 
 //-----------------set.c---------------------
 int			set_ambient(t_canvas *canvas, char **split);
@@ -156,13 +156,9 @@ int			parsing(char *file, t_info *info);
 
 //-----------------info.c------------------
 void		free_info(t_info **info);
+int			init_canvas(t_info *info);
 t_info		*init_info(void);
 int			save_info(t_info *info, char **split);
 int			line_to_info(t_info *info, char *line);
-
-//-----------------print.c------------------
-void		print_vector(char *str, t_vector vec);
-void		print_object(t_object *object);
-void		print_info(t_info *info);
 
 #endif
