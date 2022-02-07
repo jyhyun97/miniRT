@@ -6,13 +6,13 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 14:02:27 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/04 14:05:41 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 10:47:27 by jeonhyun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minirt.h"
 
-double	degree_to_radian(int degree)
+double	deg_to_rad(int degree)
 {
 	return (degree * M_PI / 180);
 }

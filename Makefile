@@ -1,8 +1,9 @@
 NAME = miniRT
-FLAGS = -Wall -Wextra -Werror# -fsanitize=address
+FLAGS = -Wall -Wextra -Werror
 SRCS_C = main.c\
 		parsing/check.c\
 		parsing/create.c\
+		parsing/create_object.c\
 		parsing/get_next_line_utils.c\
 		parsing/get_next_line.c\
 		parsing/info.c\

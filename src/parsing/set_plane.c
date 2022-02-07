@@ -6,22 +6,11 @@
 /*   By: jeonhyun <jeonhyun@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 14:26:40 by jeonhyun          #+#    #+#             */
-/*   Updated: 2022/02/04 14:41:26 by jeonhyun         ###   ########.fr       */
+/*   Updated: 2022/02/07 10:37:46 by jeonhyun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minirt.h"
-
-int	free_plane_element(char **point, char **normal, char **color)
-{
-	if (point)
-		allo_free(point);
-	if (normal)
-		allo_free(normal);
-	if (color)
-		allo_free(color);
-	return (ERROR);
-}
 
 int	push_plane(t_info *info, t_plane *plane)
 {
@@ -60,11 +49,11 @@ int	set_plane(t_info *info, char **split)
 	if (ft_strslen(split) != 3 && (!pnt || !nor || !clr
 			|| check_vector(pnt) == FALSE || check_vector(nor) == FALSE
 			|| check_vector(clr) == FALSE))
-		return (free_plane_element(pnt, nor, clr));
+		return (free_element(pnt, nor, clr));
 	plane = create_plane(
 			create_vector(ft_atod(pnt[0]), ft_atod(pnt[1]), ft_atod(pnt[2])),
 			create_vector(ft_atod(nor[0]), ft_atod(nor[1]), ft_atod(nor[2])),
 			create_color(ft_atod(clr[0]), ft_atod(clr[1]), ft_atod(clr[2])));
-	free_plane_element(pnt, nor, clr);
+	free_element(pnt, nor, clr);
 	return (push_plane(info, plane));
 }
