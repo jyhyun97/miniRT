@@ -7,7 +7,6 @@ SRCS_C = main.c\
 		parsing/get_next_line_utils.c\
 		parsing/get_next_line.c\
 		parsing/info.c\
-		parsing/phong.c\
 		parsing/set_object.c\
 		parsing/set_plane.c\
 		parsing/set_sphere.c\
@@ -21,7 +20,9 @@ SRCS_C = main.c\
 		rendering/mlx_util.c\
 		rendering/render.c\
 		rendering/vector1.c\
-		rendering/vector2.c
+		rendering/vector2.c\
+		rendering/phong.c
+
 SRCS = $(addprefix src/, $(SRCS_C))
 
 OBJS = $(SRCS:.c=.o)
